@@ -35,7 +35,7 @@ with zipfile.ZipFile('EntityBackup_' +
                      time.strftime("%b-%d-%Y_%H-%M-%S") +
                      '.zip', mode = 'w') as backupZip:
     for filename in entityFiles:
-        backupZip.write(filename)
+        backupZip.write(filename, compress_type=compression)
         os.remove(filename)
 
 entities = {}
