@@ -1,13 +1,20 @@
 #Reads all entity text files in the current director
-#Moves those files to a backup folder
+#Moves those files to a zip folder that is timestamped
 #Then makes new files for each seperate entity which are sorted
 #Version Changelog:
 #1.0 Completed Jan-23-2015 by Akhier Dragonheart
 #1.1 Now headers only show up if they have something under them
+#1.2 Changed backup folder to zipping the backups and timestamping them
 import glob
 import re
 import os
-import shutil
+import zipfile
+import time
+try:
+    import zlib
+    compression = zipfile.ZIP_DEFLATED
+except:
+    compression = zipfile.ZIP_STORED
 
 def find_between(s, first, last):
     try:
@@ -17,11 +24,6 @@ def find_between(s, first, last):
     except ValueError:
         return ""
 
-currentFolder = os.getcwd()
-backupFolder = os.path.dirname("Entity-Backup/")
-if not os.path.isdir(backupFolder):
-    os.makedirs(backupFolder)
-
 contents = []
 entityFiles = glob.glob('entity_*')
 for filename in entityFiles:
@@ -29,8 +31,12 @@ for filename in entityFiles:
         for line in ef:
             contents.append(line)
 
-    shutil.move(currentFolder + '/' + filename,
-                backupFolder + '/' + filename)
+with zipfile.ZipFile('EntityBackup_' +
+                     time.strftime("%b-%d-%Y_%H-%M-%S") +
+                     '.zip', mode = 'w') as backupZip:
+    for filename in entityFiles:
+        backupZip.write(filename)
+        os.remove(filename)
 
 entities = {}
 currentEntity = ""

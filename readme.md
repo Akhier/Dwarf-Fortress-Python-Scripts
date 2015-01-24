@@ -2,7 +2,7 @@
 
 Place in a folder with entity_[whatever] text files.
 When run it will read all entity files,
-move them all to a backup folder,
+puts them in a timestamped zip folder,
 then make a seperate file for each entity with the tags organized.
 
 ---
