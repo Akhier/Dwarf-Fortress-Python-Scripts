@@ -239,7 +239,10 @@ def backup_entities(entityfiles):
                          '.zip', mode = 'w') as backupZip:
         for filename in entityfiles:
             backupZip.write(filename, compress_type=compression)
-            os.remove(filename)
+
+def remove_old_entities(entityfiles):
+    for filename in entityfiles:
+        os.remove(filename)
 
 contents = []
 entityFiles = glob.glob('entity_*')
@@ -263,6 +266,7 @@ if entityFiles:
             elif currentEntity != "":
                 entities[currentEntity].append('[' + find_between(line, '[', ']') + ']')
 
+    remove_old_entities(entityFiles)
     for entity in entities:
         write_entity(entity)
 
