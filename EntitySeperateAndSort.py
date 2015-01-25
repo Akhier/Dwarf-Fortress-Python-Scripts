@@ -25,6 +25,32 @@ def find_between(s, first, last):
     except ValueError:
         return ""
 
+def read_entities(entityfileslist):
+    if entityfileslist:
+        contents = []
+        for filename in entityfileslist:
+            with open(filename) as ef:
+                for line in ef:
+                    contents.append(line)
+                    
+        entities = {}
+        currentEntity = ""
+        for line in contents:
+            if '[' in line:
+                if re.match(r'(\[OBJECT:ENTITY\])', line):
+                    pass
+                elif re.match(r'(\[ENTITY:)', line):
+                    currentEntity = find_between(line, ':', ']').lower()
+                    entities[currentEntity] = []
+                    entities[currentEntity].append('[' + find_between(line, '[', ']') + ']')
+                elif currentEntity != "":
+                    entities[currentEntity].append('[' + find_between(line, '[', ']') + ']')
+                    
+        return entities
+
+    else:
+        return ''
+
 def write_entity(entity):
     p_gameplay = re.compile(r'(ADVENTURE_TIER|INDIV_CONTROLLABLE|CIV_CONTROLLABLE|CREATURE:|CREATURE_HFID)')
     p_placement = re.compile(r'(START_BIOME|EXCLUSIVE_START_BIOME|DEFAULT_SITE_TYPE|BIOME_SUPPORT|SETTLEMENT_BIOME|LIKES_SITE|TOLERATES_SITE|WORLD_CONSTRUCTION)')
@@ -233,44 +259,26 @@ def write_entity(entity):
             for line in misc:
                 file.write('    ' + line + '\n')
 
-def backup_entities(entityfiles):
+def backup_entities(entityfileslist):
     with zipfile.ZipFile('EntityBackup_' +
                          time.strftime("%b-%d-%Y_%H-%M-%S") +
                          '.zip', mode = 'w') as backupZip:
-        for filename in entityfiles:
+        for filename in entityfileslist:
             backupZip.write(filename, compress_type=compression)
 
-def remove_old_entities(entityfiles):
-    for filename in entityfiles:
+def remove_old_entities(entityfileslist):
+    for filename in entityfileslist:
         os.remove(filename)
 
 contents = []
 entityFiles = glob.glob('entity_*')
 if entityFiles:
-    for filename in entityFiles:
-        with open(filename) as ef:
-            for line in ef:
-                contents.append(line)
-
     backup_entities(entityFiles)
-    entities = {}
-    currentEntity = ""
-    for line in contents:
-        if '[' in line:
-            if re.match(r'(\[OBJECT:ENTITY\])', line):
-                pass
-            elif re.match(r'(\[ENTITY:)', line):
-                currentEntity = find_between(line, ':', ']').lower()
-                entities[currentEntity] = []
-                entities[currentEntity].append('[' + find_between(line, '[', ']') + ']')
-            elif currentEntity != "":
-                entities[currentEntity].append('[' + find_between(line, '[', ']') + ']')
-
+    entities = read_entities(entityFiles)
     remove_old_entities(entityFiles)
     for entity in entities:
         write_entity(entity)
 
-    remove_old_entities(entityFiles)
     print('done')
 else:
     print('nothing to do')
