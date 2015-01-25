@@ -270,6 +270,7 @@ if entityFiles:
     for entity in entities:
         write_entity(entity)
 
+    remove_old_entities(entityFiles)
     print('done')
 else:
     print('nothing to do')
