@@ -6,6 +6,7 @@
 #1.1 Now headers only show up if they have something under them
 #1.2 Changed backup folder to zipping the backups and timestamping them
 #1.3 Now only does stuff if something to do
+#1.4 Fixed major bug: POSITION tag not being written to file
 import glob
 import re
 import os
@@ -32,7 +33,7 @@ def read_entities(entityfileslist):
             with open(filename) as ef:
                 for line in ef:
                     contents.append(line)
-                    
+
         entities = {}
         currentEntity = ""
         for line in contents:
@@ -45,13 +46,12 @@ def read_entities(entityfileslist):
                     entities[currentEntity].append('[' + find_between(line, '[', ']') + ']')
                 elif currentEntity != "":
                     entities[currentEntity].append('[' + find_between(line, '[', ']') + ']')
-                    
-        return entities
 
+        return entities
     else:
         return ''
 
-def write_entity(entity):
+def write_entity(entity, entityname):
     p_gameplay = re.compile(r'(ADVENTURE_TIER|INDIV_CONTROLLABLE|CIV_CONTROLLABLE|CREATURE:|CREATURE_HFID)')
     p_placement = re.compile(r'(START_BIOME|EXCLUSIVE_START_BIOME|DEFAULT_SITE_TYPE|BIOME_SUPPORT|SETTLEMENT_BIOME|LIKES_SITE|TOLERATES_SITE|WORLD_CONSTRUCTION)')
     p_population = re.compile(r'(MAX_POP_NUMBER|MAX_SITE_POP_NUMBER|MAX_STARTING_CIV_NUMBER)')
@@ -68,8 +68,8 @@ def write_entity(entity):
     p_plant = re.compile(r'(USE_EVIL_PLANTS|USE_EVIL_WOOD|USE_GOOD_PLANTS|USE_GOOD_WOOD|USE_MISC_PROCESSED_WOOD_PRODUCTS|INDOOR_WOOD|OUTDOOR_WOOD|WOOD_WEAPONS|WOOD_ARMOR)')
     p_harvesting = re.compile(r'(RIVER_PRODUCTS|OCEAN_PRODUCTS|INDOOR_FARMING|OUTDOOR_FARMING|INDOOR_GARDENS|OUTDOOR_GARDENS|INDOOR_ORCHARDS|OUTDOOR_ORCHARDS)')
     p_equipment = re.compile(r'(CLOTHING\]|SUBTERRANEAN_CLOTHING|EQUIPMENT_IMPROVEMENTS|IMPROVED_BOW|METAL_PREF|STONE_PREF|GEM_PREF|GEM_SHAPE|STONE_SHAPE|DIVINE_MAT_CLOTH|DIVINE_MAT_WEAPONS|DIVINE_MAT_ARMOR)')
-    with open('entity_' + entity + '.txt', 'w') as file:
-        file.write('entity_' + entity + '\n\n[OBJECT:ENTITY]\n\n')
+    with open('entity_' + entityname + '.txt', 'w') as file:
+        file.write('entity_' + entityname + '\n\n[OBJECT:ENTITY]\n\n')
         gameplay = []
         placement = []
         population = []
@@ -88,7 +88,7 @@ def write_entity(entity):
         harvesting = []
         equipment = []
         misc = []
-        for line in entities[entity]:
+        for line in entity:
             if re.match(r'(\[ENTITY:)', line):
                 file.write(line + '\n')
             elif re.search(p_gameplay, line):
@@ -105,7 +105,7 @@ def write_entity(entity):
                 tissue.append(line)
             elif re.search(p_position, line):
                 currentPosition = find_between(line, ':', ']')
-                listOfPositions.append(currentPosition)
+                listOfPositions.append(line)
                 position[currentPosition] = []
             elif currentPosition != "" and re.search(p_subposition, line):
                 position[currentPosition].append(line)
@@ -184,11 +184,10 @@ def write_entity(entity):
                        '==================================================\n')
             listOfPositions.sort()
             for item in listOfPositions:
-                for line in position[item]:
-                    if '[NAME' not in line:
-                        file.write('    ')
-                    
-                    file.write('    ' + line + '\n')
+                file.write('    ' + item + '\n')
+                currentPosition = find_between(item, ':', ']')
+                for line in position[currentPosition]:
+                    file.write('        ' + line + '\n')
                     
             leadership.sort()
             for line in leadership:
@@ -270,15 +269,15 @@ def remove_old_entities(entityfileslist):
     for filename in entityfileslist:
         os.remove(filename)
 
-contents = []
-entityFiles = glob.glob('entity_*')
-if entityFiles:
-    backup_entities(entityFiles)
-    entities = read_entities(entityFiles)
-    remove_old_entities(entityFiles)
-    for entity in entities:
-        write_entity(entity)
+if __name__ == '__main__':
+    entityFiles = glob.glob('entity_*')
+    if entityFiles:
+        backup_entities(entityFiles)
+        entities = read_entities(entityFiles)
+        remove_old_entities(entityFiles)
+        for entityname in entities:
+            write_entity(entities[entityname], entityname)
 
-    print('done')
-else:
-    print('nothing to do')
+        print('done')
+    else:
+        print('nothing to do')
