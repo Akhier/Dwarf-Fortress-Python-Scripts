@@ -25,6 +25,198 @@ def find_between(s, first, last):
     except ValueError:
         return ""
 
+def write_entity(entity):
+    with open('entity_' + entity + '.txt', 'w') as file:
+        file.write('entity_' + entity + '\n\n[OBJECT:ENTITY]\n\n')
+        gameplay = []
+        placement = []
+        population = []
+        flavor = []
+        religion = []
+        tissue = []
+        position = {}
+        listOfPositions = []
+        currentPosition = ""
+        leadership = []
+        permission = []
+        behavior = []
+        resource = []
+        animal = []
+        plant = []
+        harvesting = []
+        equipment = []
+        misc = []
+        for line in entities[entity]:
+            if re.match(r'(\[ENTITY:)', line):
+                file.write(line + '\n')
+            elif re.search(p_gameplay, line):
+                gameplay.append(line)
+            elif re.search(p_placement, line):
+                placement.append(line)
+            elif re.search(p_population, line):
+                population.append(line)
+            elif re.search(p_flavor, line):
+                flavor.append(line)
+            elif re.search(p_religion, line):
+                religion.append(line)
+            elif re.search(p_tissue, line):
+                tissue.append(line)
+            elif re.search(p_position, line):
+                currentPosition = find_between(line, ':', ']')
+                listOfPositions.append(currentPosition)
+                position[currentPosition] = []
+            elif currentPosition != "" and re.search(p_subposition, line):
+                position[currentPosition].append(line)
+            elif re.search(p_leadership, line):
+                leadership.append(line)
+            elif re.search(p_permission, line):
+                permission.append(line)
+            elif re.search(p_behavior, line):
+                behavior.append(line)
+            elif re.search(p_resource, line):
+                resource.append(line)
+            elif re.search(p_animal, line):
+                animal.append(line)
+            elif re.search(p_plant, line):
+                plant.append(line)
+            elif re.search(p_harvesting, line):
+                harvesting.append(line)
+            elif re.search(p_equipment, line):
+                equipment.append(line)
+            else:
+                misc.append(line)
+        
+        if gameplay or placement or population:
+            file.write('\n==================================================\n' + 
+                       'Entity Basics\n' + 
+                       '==================================================\n')
+            if gameplay:
+                file.write('    Gameplay Tokens\n' +    
+                           '    ----------------------------------------------\n')
+                gameplay.sort()
+                for line in gameplay:
+                    file.write('    ' + line + '\n')
+
+            if placement:
+                file.write('\n    Placement Tokens\n' +    
+                           '    ----------------------------------------------\n')
+                placement.sort()
+                for line in placement:
+                    file.write('    ' + line + '\n')
+
+            if population:
+                file.write('\n    population Tokens\n' +    
+                           '    ----------------------------------------------\n')
+                population.sort()
+                for line in population:
+                    file.write('    ' + line + '\n')
+
+        if flavor or religion or tissue:
+            file.write('\n==================================================\n' + 
+                       'Fluff\n' + 
+                       '==================================================\n')
+            if flavor:
+                file.write('\n    Flavor Tokens\n' +    
+                           '    ----------------------------------------------\n')
+                flavor.sort()
+                for line in flavor:
+                    file.write('    ' + line + '\n')
+
+            if religion:
+                file.write('\n    Religion Tokens\n' +    
+                           '    ----------------------------------------------\n')
+                religion.sort()
+                for line in religion:
+                    file.write('    ' + line + '\n')
+
+            if tissue:
+                file.write('\n    Tissue Styling Tokens\n' +    
+                           '    ----------------------------------------------\n')
+                tissue.sort()
+                for line in tissue:
+                    file.write('    ' + line + '\n')
+
+        if listOfPositions or leadership:
+            file.write('\n==================================================\n' + 
+                       'Leadership Tokens\n' + 
+                       '==================================================\n')
+            listOfPositions.sort()
+            for item in listOfPositions:
+                for line in position[item]:
+                    if '[NAME' not in line:
+                        file.write('    ')
+                    
+                    file.write('    ' + line + '\n')
+                    
+            leadership.sort()
+            for line in leadership:
+                file.write('    ' + line + '\n')
+
+        if permission or behavior:
+            file.write('\n==================================================\n' + 
+                       'Capabilities\n' + 
+                       '==================================================\n')
+            if permission:
+                file.write('\n    Permission Tokens\n' +    
+                           '    ----------------------------------------------\n')
+                permission.sort()
+                for line in permission:
+                    file.write('    ' + line + '\n')
+
+            if behavior:
+                file.write('\n    Behavior Tokens\n' +    
+                           '    ----------------------------------------------\n')
+                behavior.sort()
+                for line in behavior:
+                    file.write('    ' + line + '\n')
+
+        if resource or animal or plant or harvesting or equipment:
+            file.write('\n==================================================\n' + 
+                       'Resources\n' + 
+                       '==================================================\n')
+            if resource:
+                file.write('\n    General Resource Tokens\n' +    
+                           '    ----------------------------------------------\n')
+                resource.sort()
+                for line in resource:
+                    file.write('    ' + line + '\n')
+
+            if animal:
+                file.write('\n    Animal Tokens\n' +    
+                           '    ----------------------------------------------\n')
+                animal.sort()
+                for line in animal:
+                    file.write('    ' + line + '\n')
+
+            if plant:
+                file.write('\n    Plant Tokens\n' +    
+                           '    ----------------------------------------------\n')
+                plant.sort()
+                for line in plant:
+                    file.write('    ' + line + '\n')
+
+            if harvesting:
+                file.write('\n    Harvesting Tokens\n' +    
+                           '    ----------------------------------------------\n')
+                harvesting.sort()
+                for line in harvesting:
+                    file.write('    ' + line + '\n')
+
+            if equipment:
+                file.write('\n    Equipment Tokens\n' +    
+                           '    ----------------------------------------------\n')
+                equipment.sort()
+                for line in equipment:
+                    file.write('    ' + line + '\n')
+
+        if misc:
+            file.write('\n==================================================\n' + 
+                       'Misc\n' + 
+                       '==================================================\n')
+            misc.sort()
+            for line in misc:
+                file.write('    ' + line + '\n')
+
 contents = []
 entityFiles = glob.glob('entity_*')
 if entityFiles:
@@ -71,196 +263,7 @@ if entityFiles:
     p_equipment = re.compile(r'(CLOTHING\]|SUBTERRANEAN_CLOTHING|EQUIPMENT_IMPROVEMENTS|IMPROVED_BOW|METAL_PREF|STONE_PREF|GEM_PREF|GEM_SHAPE|STONE_SHAPE|DIVINE_MAT_CLOTH|DIVINE_MAT_WEAPONS|DIVINE_MAT_ARMOR)')
 
     for entity in entities:
-        with open('entity_' + entity + '.txt', 'w') as file:
-            file.write('entity_' + entity + '\n\n[OBJECT:ENTITY]\n\n')
-            gameplay = []
-            placement = []
-            population = []
-            flavor = []
-            religion = []
-            tissue = []
-            position = {}
-            listOfPositions = []
-            currentPosition = ""
-            leadership = []
-            permission = []
-            behavior = []
-            resource = []
-            animal = []
-            plant = []
-            harvesting = []
-            equipment = []
-            misc = []
-            for line in entities[entity]:
-                if re.match(r'(\[ENTITY:)', line):
-                    file.write(line + '\n')
-                elif re.search(p_gameplay, line):
-                    gameplay.append(line)
-                elif re.search(p_placement, line):
-                    placement.append(line)
-                elif re.search(p_population, line):
-                    population.append(line)
-                elif re.search(p_flavor, line):
-                    flavor.append(line)
-                elif re.search(p_religion, line):
-                    religion.append(line)
-                elif re.search(p_tissue, line):
-                    tissue.append(line)
-                elif re.search(p_position, line):
-                    currentPosition = find_between(line, ':', ']')
-                    listOfPositions.append(currentPosition)
-                    position[currentPosition] = []
-                elif currentPosition != "" and re.search(p_subposition, line):
-                    position[currentPosition].append(line)
-                elif re.search(p_leadership, line):
-                    leadership.append(line)
-                elif re.search(p_permission, line):
-                    permission.append(line)
-                elif re.search(p_behavior, line):
-                    behavior.append(line)
-                elif re.search(p_resource, line):
-                    resource.append(line)
-                elif re.search(p_animal, line):
-                    animal.append(line)
-                elif re.search(p_plant, line):
-                    plant.append(line)
-                elif re.search(p_harvesting, line):
-                    harvesting.append(line)
-                elif re.search(p_equipment, line):
-                    equipment.append(line)
-                else:
-                    misc.append(line)
-            
-            if gameplay or placement or population:
-                file.write('\n==================================================\n' + 
-                           'Entity Basics\n' + 
-                           '==================================================\n')
-                if gameplay:
-                    file.write('    Gameplay Tokens\n' +    
-                               '    ----------------------------------------------\n')
-                    gameplay.sort()
-                    for line in gameplay:
-                        file.write('    ' + line + '\n')
-
-                if placement:
-                    file.write('\n    Placement Tokens\n' +    
-                               '    ----------------------------------------------\n')
-                    placement.sort()
-                    for line in placement:
-                        file.write('    ' + line + '\n')
-
-                if population:
-                    file.write('\n    population Tokens\n' +    
-                               '    ----------------------------------------------\n')
-                    population.sort()
-                    for line in population:
-                        file.write('    ' + line + '\n')
-
-            if flavor or religion or tissue:
-                file.write('\n==================================================\n' + 
-                           'Fluff\n' + 
-                           '==================================================\n')
-                if flavor:
-                    file.write('\n    Flavor Tokens\n' +    
-                               '    ----------------------------------------------\n')
-                    flavor.sort()
-                    for line in flavor:
-                        file.write('    ' + line + '\n')
-
-                if religion:
-                    file.write('\n    Religion Tokens\n' +    
-                               '    ----------------------------------------------\n')
-                    religion.sort()
-                    for line in religion:
-                        file.write('    ' + line + '\n')
-
-                if tissue:
-                    file.write('\n    Tissue Styling Tokens\n' +    
-                               '    ----------------------------------------------\n')
-                    tissue.sort()
-                    for line in tissue:
-                        file.write('    ' + line + '\n')
-
-            if listOfPositions or leadership:
-                file.write('\n==================================================\n' + 
-                           'Leadership Tokens\n' + 
-                           '==================================================\n')
-                listOfPositions.sort()
-                for item in listOfPositions:
-                    for line in position[item]:
-                        if '[NAME' not in line:
-                            file.write('    ')
-                        
-                        file.write('    ' + line + '\n')
-                        
-                leadership.sort()
-                for line in leadership:
-                    file.write('    ' + line + '\n')
-
-            if permission or behavior:
-                file.write('\n==================================================\n' + 
-                           'Capabilities\n' + 
-                           '==================================================\n')
-                if permission:
-                    file.write('\n    Permission Tokens\n' +    
-                               '    ----------------------------------------------\n')
-                    permission.sort()
-                    for line in permission:
-                        file.write('    ' + line + '\n')
-
-                if behavior:
-                    file.write('\n    Behavior Tokens\n' +    
-                               '    ----------------------------------------------\n')
-                    behavior.sort()
-                    for line in behavior:
-                        file.write('    ' + line + '\n')
-
-            if resource or animal or plant or harvesting or equipment:
-                file.write('\n==================================================\n' + 
-                           'Resources\n' + 
-                           '==================================================\n')
-                if resource:
-                    file.write('\n    General Resource Tokens\n' +    
-                               '    ----------------------------------------------\n')
-                    resource.sort()
-                    for line in resource:
-                        file.write('    ' + line + '\n')
-
-                if animal:
-                    file.write('\n    Animal Tokens\n' +    
-                               '    ----------------------------------------------\n')
-                    animal.sort()
-                    for line in animal:
-                        file.write('    ' + line + '\n')
-
-                if plant:
-                    file.write('\n    Plant Tokens\n' +    
-                               '    ----------------------------------------------\n')
-                    plant.sort()
-                    for line in plant:
-                        file.write('    ' + line + '\n')
-
-                if harvesting:
-                    file.write('\n    Harvesting Tokens\n' +    
-                               '    ----------------------------------------------\n')
-                    harvesting.sort()
-                    for line in harvesting:
-                        file.write('    ' + line + '\n')
-
-                if equipment:
-                    file.write('\n    Equipment Tokens\n' +    
-                               '    ----------------------------------------------\n')
-                    equipment.sort()
-                    for line in equipment:
-                        file.write('    ' + line + '\n')
-
-            if misc:
-                file.write('\n==================================================\n' + 
-                           'Misc\n' + 
-                           '==================================================\n')
-                misc.sort()
-                for line in misc:
-                    file.write('    ' + line + '\n')
+        write_entity(entity)
 
     print('done')
 else:
