@@ -95,9 +95,11 @@ class BasicSetup(tk.Frame):
         self.supportedbiome.set('MOUNTAIN')
         self.supportedbiomes = tkst.ScrolledText(self, state='disabled', height=5, width=50, wrap=tk.WORD)
         self.supportedbiomes.grid(row=8, column=1, columnspan=3, rowspan=4, sticky=('w', 'e'))
-        self.setsupportedbiome = tk.Button(self, text='Set Supported Biome', command=lambda:self.add_supportedbiome())
+        self.setsupportedbiome = tk.Button(self, text='Set Supported Biome',
+                                           command=lambda:self.add_supportedbiome())
         self.setsupportedbiome.grid(row=8, column=0, sticky=('w', 'e'))
-        self.removesupportedbiome = tk.Button(self, text='Remove Supported Biome', command=lambda:self.remove_supportedbiome())
+        self.removesupportedbiome = tk.Button(self, text='Remove Supported Biome',
+                                              command=lambda:self.remove_supportedbiome())
         self.removesupportedbiome.grid(row=11, column=0, sticky=('w', 'e'))
 
     def toggle_alladvtier(self):
