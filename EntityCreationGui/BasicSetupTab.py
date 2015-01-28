@@ -65,20 +65,32 @@ class BasicSetup(tk.Frame):
         self.setstartbiome.grid(row=2, column=0, sticky=('w', 'e'))
         self.removestartbiome = tk.Button(self, text='Remove Start Biome', command=lambda:self.remove_startbiome())
         self.removestartbiome.grid(row=4, column=0, sticky=('w', 'e'))
+
+        #SETTLEMENT_BIOME
+        self.settlementlist = []
+        self.settlementbiome = ttk.Combobox(self, values=self.singlebiomelist)
+        self.settlementbiome.grid(row=6, column=0, sticky=('w', 'e'))
+        self.settlementbiome.set('MOUNTAIN')
+        self.settlementbiomes = tkst.ScrolledText(self, state='disabled', height=4, width=50, wrap=tk.WORD)
+        self.settlementbiomes.grid(row=5, column=1, columnspan=3, rowspan=3, sticky=('w','e'))
+        self.setsettlementbiome = tk.Button(self, text='Set Settlement Biome', command=lambda:self.add_settlementbiome())
+        self.setsettlementbiome.grid(row=5, column=0, sticky=('w', 'e'))
+        self.removesettlementbiome = tk.Button(self, text='Remove Settlement Biome', command=lambda:self.remove_settlementbiome())
+        self.removesettlementbiome.grid(row=7, column=0, sticky=('w', 'e'))
         
         #BIOME_SUPPORT
         self.supporteddict = {}
         self.frequencyofbiome = tk.Spinbox(self, from_=0, to=10, justify='center')
-        self.frequencyofbiome.grid(row=7, column=0, sticky=('w', 'e'))
+        self.frequencyofbiome.grid(row=10, column=0, sticky=('w', 'e'))
         self.supportedbiome = ttk.Combobox(self, values=self.singlebiomelist)
-        self.supportedbiome.grid(row=6, column=0, sticky=('w', 'e'))
+        self.supportedbiome.grid(row=9, column=0, sticky=('w', 'e'))
         self.supportedbiome.set('MOUNTAIN')
         self.supportedbiomes = tkst.ScrolledText(self, state='disabled', height=5, width=50, wrap=tk.WORD)
-        self.supportedbiomes.grid(row=5, column=1, columnspan=3, rowspan=4, sticky=('w', 'e'))
+        self.supportedbiomes.grid(row=8, column=1, columnspan=3, rowspan=4, sticky=('w', 'e'))
         self.setsupportedbiome = tk.Button(self, text='Set Supported Biome', command=lambda:self.add_supportedbiome())
-        self.setsupportedbiome.grid(row=5, column=0, sticky=('w', 'e'))
+        self.setsupportedbiome.grid(row=8, column=0, sticky=('w', 'e'))
         self.removesupportedbiome = tk.Button(self, text='Remove Supported Biome', command=lambda:self.remove_supportedbiome())
-        self.removesupportedbiome.grid(row=8, column=0, sticky=('w', 'e'))
+        self.removesupportedbiome.grid(row=11, column=0, sticky=('w', 'e'))
 
     def toggle_alladvtier(self):
         if self.indivcon.get():
@@ -94,44 +106,59 @@ class BasicSetup(tk.Frame):
         else:
             self.advtiernum.configure(state='disabled')
 
+    def fill_startbiomes(self):
+        self.startbiomes.config(state='normal')
+        self.startbiomes.delete('1.0', tk.END)
+        self.startbiomes.insert('1.0', str(self.startinglist).strip('[]'))
+        self.startbiomes.config(state='disabled')
+
     def add_startbiome(self):
         if self.startbiome.get() not in self.startinglist:
             self.startinglist.append(self.startbiome.get())
-            self.startbiomes.config(state='normal')
-            self.startbiomes.delete('1.0', tk.END)
-            self.startbiomes.insert('1.0', str(self.startinglist).strip('[]'))
-            self.startbiomes.config(state='disabled')
+            self.fill_startbiomes()
 
     def remove_startbiome(self):
         if self.startbiome.get() in self.startinglist:
             self.startinglist.remove(self.startbiome.get())
-            self.startbiomes.config(state='normal')
-            self.startbiomes.delete('1.0', tk.END)
-            self.startbiomes.insert('1.0', str(self.startinglist).strip('[]'))
-            self.startbiomes.config(state='disabled')
+            self.fill_startbiomes()
 
-    def get_supportedbiomestring(self):
+    def fill_settlementbiomes(self):
+        self.settlementbiomes.config(state='normal')
+        self.settlementbiomes.delete('1.0', tk.END)
+        self.settlementbiomes.insert('1.0', str(self.settlementlist).strip('[]'))
+        self.settlementbiomes.config(state='disabled')
+
+    def add_settlementbiome(self):
+        if self.settlementbiome.get() not in self.settlementlist:
+            self.settlementlist.append(self.settlementbiome.get())
+            self.fill_settlementbiomes()
+
+    def remove_settlementbiome(self):
+        if self.settlementbiome.get() in self.settlementlist:
+            self.settlementlist.remove(self.settlementbiome.get())
+            self.fill_settlementbiomes()
+
+    def fill_supportedbiomes(self):
         string = ''
         for key, value in self.supporteddict.items():
             string = string + key + ':' + value + ' '
             
-        return string
+        self.supportedbiomes.config(state='normal')
+        self.supportedbiomes.delete('1.0', tk.END)
+        self.supportedbiomes.insert('1.0', string)
+        self.supportedbiomes.config(state='disabled')
 
     def add_supportedbiome(self):
         if self.supportedbiome.get() not in self.supporteddict:
             self.supporteddict[self.supportedbiome.get()] = self.frequencyofbiome.get()
-            self.supportedbiomes.config(state='normal')
-            self.supportedbiomes.delete('1.0', tk.END)
-            self.supportedbiomes.insert('1.0', self.get_supportedbiomestring())
-            self.supportedbiomes.config(state='disabled')
+            
+        self.fill_supportedbiomes()
 
     def remove_supportedbiome(self):
         if self.supportedbiome.get() in self.supporteddict:
             self.supporteddict.pop(self.supportedbiome.get(), None)
-            self.supportedbiomes.config(state='normal')
-            self.supportedbiomes.delete('1.0', tk.END)
-            self.supportedbiomes.insert('1.0', self.get_supportedbiomestring())
-            self.supportedbiomes.config(state='disabled')
+            
+        self.fill_supportedbiomes()
 
 if __name__ == '__main__':
     root = tk.Tk()
