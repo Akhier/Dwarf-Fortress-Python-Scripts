@@ -8,21 +8,22 @@ class BasicSetup(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent
-        self.singlebiomelist = (['MOUNTAIN', 'MARSH_TEMPERATE_FRESHWATER', 'SWAMP_TROPICAL_SALTWATER', 'MARSH_TROPICAL_SALTWATER',
-                                 'FOREST_TEMPERATE_BROADLEAF', 'FOREST_TROPICAL_MOIST_BROADLEAF', 'SHRUBLAND_TEMPERATE',
-                                 'DESERT_BADLAND', 'OCEAN_ARCTIC', 'POOL_TEMPERATE_SALTWATER', 'POOL_TROPICAL_SALTWATER',
-                                 'LAKE_TEMPERATE_SALTWATER', 'LAKE_TROPICAL_SALTWATER', 'RIVER_TEMPERATE_SALTWATER',
-                                 'RIVER_TROPICAL_SALTWATER', 'GLACIER', 'MARSH_TEMPERATE_SALTWATER', 'SWAMP_MANGROVE',
-                                 'FOREST_TAIGA', 'FOREST_TROPICAL_CONIFER', 'GRASSLAND_TEMPERATE', 'GRASSLAND_TROPICAL',
-                                 'DESERT_ROCK', 'POOL_TEMPERATE_FRESHWATER', 'POOL_TROPICAL_FRESHWATER', 'LAKE_TEMPERATE_FRESHWATER',
-                                 'LAKE_TROPICAL_FRESHWATER', 'RIVER_TEMPERATE_FRESHWATER', 'RIVER_TROPICAL_FRESHWATER',
-                                 'SUBTERRANEAN_WATER', 'TUNDRA', 'SWAMP_TROPICAL_FRESHWATER', 'MARSH_TROPICAL_FRESHWATER',
-                                 'FOREST_TEMPERATE_CONIFER', 'FOREST_TROPICAL_DRY_BROADLEAF', 'SAVANNA_TEMPERATE',
-                                 'SAVANNA_TROPICAL', 'DESERT_SAND', 'POOL_TEMPERATE_BRACKISHWATER', 'POOL_TROPICAL_BRACKISHWATER',
-                                 'LAKE_TEMPERATE_BRACKISHWATER', 'LAKE_TROPICAL_BRACKISHWATER', 'RIVER_TEMPERATE_BRACKISHWATER',
-                                 'RIVER_TROPICAL_BRACKISHWATER', 'SUBTERRANEAN_CHASM', 'SWAMP_TEMPERATE_FRESHWATER',
-                                 'SHRUBLAND_TROPICAL', 'OCEAN_TROPICAL', 'SUBTERRANEAN_LAVA', 'SWAMP_TEMPERATE_SALTWATER',
-                                 'OCEAN_TEMPERATE'])
+        self.singlebiomelist = ['MOUNTAIN', 'MARSH_TEMPERATE_FRESHWATER', 'SWAMP_TROPICAL_SALTWATER', 'MARSH_TROPICAL_SALTWATER',
+                                'FOREST_TEMPERATE_BROADLEAF', 'FOREST_TROPICAL_MOIST_BROADLEAF', 'SHRUBLAND_TEMPERATE',
+                                'DESERT_BADLAND', 'OCEAN_ARCTIC', 'POOL_TEMPERATE_SALTWATER', 'POOL_TROPICAL_SALTWATER',
+                                'LAKE_TEMPERATE_SALTWATER', 'LAKE_TROPICAL_SALTWATER', 'RIVER_TEMPERATE_SALTWATER',
+                                'RIVER_TROPICAL_SALTWATER', 'GLACIER', 'MARSH_TEMPERATE_SALTWATER', 'SWAMP_MANGROVE',
+                                'FOREST_TAIGA', 'FOREST_TROPICAL_CONIFER', 'GRASSLAND_TEMPERATE', 'GRASSLAND_TROPICAL',
+                                'DESERT_ROCK', 'POOL_TEMPERATE_FRESHWATER', 'POOL_TROPICAL_FRESHWATER', 'LAKE_TEMPERATE_FRESHWATER',
+                                'LAKE_TROPICAL_FRESHWATER', 'RIVER_TEMPERATE_FRESHWATER', 'RIVER_TROPICAL_FRESHWATER',
+                                'SUBTERRANEAN_WATER', 'TUNDRA', 'SWAMP_TROPICAL_FRESHWATER', 'MARSH_TROPICAL_FRESHWATER',
+                                'FOREST_TEMPERATE_CONIFER', 'FOREST_TROPICAL_DRY_BROADLEAF', 'SAVANNA_TEMPERATE',
+                                'SAVANNA_TROPICAL', 'DESERT_SAND', 'POOL_TEMPERATE_BRACKISHWATER', 'POOL_TROPICAL_BRACKISHWATER',
+                                'LAKE_TEMPERATE_BRACKISHWATER', 'LAKE_TROPICAL_BRACKISHWATER', 'RIVER_TEMPERATE_BRACKISHWATER',
+                                'RIVER_TROPICAL_BRACKISHWATER', 'SUBTERRANEAN_CHASM', 'SWAMP_TEMPERATE_FRESHWATER',
+                                'SHRUBLAND_TROPICAL', 'OCEAN_TROPICAL', 'SUBTERRANEAN_LAVA', 'SWAMP_TEMPERATE_SALTWATER',
+                                'OCEAN_TEMPERATE']
+        self.sitetypelist = ['DARK_FORTRESS', 'CAVE', 'CAVE_DETAILED', 'TREE_CITY', 'CITY']
 
         #INDIV_CONTROLLABLE
         self.indivcon = tk.IntVar()
@@ -35,7 +36,7 @@ class BasicSetup(tk.Frame):
         self.civcon = tk.IntVar()
         self.civcontrollable = tk.Checkbutton(self, variable=self.civcon,
                                               text='Civ Controllable')
-        self.civcontrollable.grid(row=0, column=2, sticky='w')
+        self.civcontrollable.grid(row=0, column=1, sticky='w')
 
         #ADVENTURE_TIER
         self.advtiernum = tk.Spinbox(self, from_=1, to=9001)
@@ -101,6 +102,11 @@ class BasicSetup(tk.Frame):
         self.removesupportedbiome = tk.Button(self, text='Remove Supported Biome',
                                               command=lambda:self.remove_supportedbiome())
         self.removesupportedbiome.grid(row=11, column=0, sticky=('w', 'e'))
+        
+        #DEFAULT_SITE_TYPE
+        tk.Label(self, text='Default Site Type', justify='left').grid(row=12, column=0, sticky='w')
+        self.defaultsite = ttk.Combobox(self, values=self.sitetypelist)
+        self.defaultsite.grid(row=12, column=1, sticky='w')
 
     def toggle_alladvtier(self):
         if self.indivcon.get():
