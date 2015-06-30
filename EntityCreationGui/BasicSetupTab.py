@@ -78,12 +78,12 @@ class BasicSetup(tk.Frame):
         self.settlementbiomes = tkst.ScrolledText(self, state='disabled', height=4, width=50, wrap=tk.WORD)
         self.settlementbiomes.grid(row=5, column=1, columnspan=3, rowspan=3, sticky=('w','e'))
         self.setsettlementbiome = tk.Button(self, text='Set Settlement Biome',
-                                            command=lambda biome=self.settlementbiome, biomes=self.settlementbiomes,
-                                            list=self.settlementlist:self.add_settlementbiome())
+                                            command=lambda settlementbiome=self.settlementbiome, settlementbiomes=self.settlementbiomes,
+                                            list=self.settlementlist: self.add_settlementbiome(settlementbiome, settlementbiomes, list))
         self.setsettlementbiome.grid(row=5, column=0, sticky=('w', 'e'))
         self.removesettlementbiome = tk.Button(self, text='Remove Settlement Biome',
-                                               command=lambda biome=self.settlementbiome, biomes=self.settlementbiomes,
-                                               list=self.settlementlist: self.remove_settlementbiome())
+                                               command=lambda settlementbiome=self.settlementbiome, settlementbiomes=self.settlementbiomes,
+                                               list=self.settlementlist: self.remove_settlementbiome(settlementbiome, settlementbiomes, list))
         self.removesettlementbiome.grid(row=7, column=0, sticky=('w', 'e'))
         
         #BIOME_SUPPORT
@@ -131,6 +131,22 @@ class BasicSetup(tk.Frame):
         if biome.get() in list:
             list.remove(biome.get())
             self.fill_biomes(biomes, list)
+
+    def fill_settlementbiomes(self, settlementbiomes, list):
+        settlementbiomes.config(state='normal')
+        settlementbiomes.delete('1.0', tk.END)
+        settlementbiomes.insert('1.0', str(list).strip('[]'))
+        settlementbiomes.config(state='disabled')
+
+    def add_settlementbiome(self, settlementbiome, settlementbiomes, list):
+        if settlementbiome.get() not in list:
+            list.append(settlementbiome.get())
+            self.fill_settlementbiomes(settlementbiomes, list)
+
+    def remove_settlementbiome(self, settlementbiome, settlementbiomes, list):
+        if settlementbiome.get() in list:
+            list.remove(settlementbiome.get())
+            self.fill_settlementbiomes(settlementbiomes, list)
 
     def fill_supportedbiomes(self):
         string = ''
