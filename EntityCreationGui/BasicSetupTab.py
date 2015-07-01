@@ -197,6 +197,28 @@ class BasicSetup(tk.Frame):
 
         self.fill_supportedbiomes()
 
+    def fill_sitetolerances(self):
+        string = ''
+        for key, value in self.sitetolerancedict.items():
+            string = string + key + ':' + value + ' '
+
+        self.toleratedsites.config(state='normal')
+        self.toleratedsites.delete('1.0', tk.END)
+        self.toleratedsites.insert('1.0', string)
+        self.toleratedsites.config(state='disabled')
+
+    def add_sitetolerance(self):
+        if self.sites.get() not in self.sitetolerancedict:
+            self.sitetolerancedict[self.sites.get()] = 'LIKES' if self.ToLi.get() == 1 else 'TOLERATES'
+
+        self.fill_sitetolerances()
+
+    def remove_sitetolerance(self):
+        if self.sites.get() in self.sitetolerancedict:
+            self.sitetolerancedict.pop(self.sites.get(), None)
+
+        self.fill_sitetolerances()
+
 if __name__ == '__main__':
     root = tk.Tk()
     note = ttk.Notebook(root)
