@@ -113,21 +113,21 @@ class BasicSetup(tk.Frame):
         self.ToLi = tk.IntVar()
         self.sitetolerancedict = {}
         self.sites = ttk.Combobox(self, values=self.sitetypelist)
-        self.sites.grid(row=15, column=0, sticky=('w', 'e'))
+        self.sites.grid(row=14, column=0, sticky=('w', 'e'))
         self.sites.set('DARK_FORTRESS')
         self.like = ttk.Radiobutton(self, text='LIKES', variable=self.ToLi, value=1)
-        self.like.grid(row=16, column=0, sticky=('w'))
+        self.like.grid(row=15, column=0, sticky=('w'))
         self.tolerate = ttk.Radiobutton(self, text='TOLERATES', variable=self.ToLi, value=2)
-        self.tolerate.grid(row=16, column=0, sticky=('e'))
+        self.tolerate.grid(row=15, column=0, sticky=('e'))
         self.ToLi.set(1)
-        self.toleratedsites = tkst.ScrolledText(self, state='disabled', height=5, width=50, wrap=tk.WORD)
-        self.toleratedsites.grid(row=14, column=1, columnspan=3, rowspan=4, sticky=('w', 'e'))
+        self.toleratedsites = tkst.ScrolledText(self, state='disabled', height=3, width=50, wrap=tk.WORD)
+        self.toleratedsites.grid(row=14, column=2, columnspan=2, rowspan=2, sticky=('w', 'e'))
         self.setsitetolerance = tk.Button(self, text='Set Site Tolerance',
                                           command=lambda: self.add_sitetolerance())
-        self.setsitetolerance.grid(row=14, column=0, sticky=('w', 'e'))
+        self.setsitetolerance.grid(row=14, column=1, sticky=('w', 'e'))
         self.removesitetolerance = tk.Button(self, text='Remove Site Tolerance',
                                              command=lambda: self.remove_sitetolerance())
-        self.removesitetolerance.grid(row=17, column=0, sticky=('w', 'e'))
+        self.removesitetolerance.grid(row=15, column=1, sticky=('w', 'e'))
 
     def toggle_alladvtier(self):
         if self.indivcon.get():
@@ -186,8 +186,7 @@ class BasicSetup(tk.Frame):
         self.supportedbiomes.config(state='disabled')
 
     def add_supportedbiome(self):
-        if self.supportedbiome.get() not in self.supporteddict:
-            self.supporteddict[self.supportedbiome.get()] = self.frequencyofbiome.get()
+        self.supporteddict[self.supportedbiome.get()] = self.frequencyofbiome.get()
 
         self.fill_supportedbiomes()
 
@@ -208,8 +207,10 @@ class BasicSetup(tk.Frame):
         self.toleratedsites.config(state='disabled')
 
     def add_sitetolerance(self):
-        if self.sites.get() not in self.sitetolerancedict:
-            self.sitetolerancedict[self.sites.get()] = 'LIKES' if self.ToLi.get() == 1 else 'TOLERATES'
+        if self.ToLi.get() == 1:
+            self.sitetolerancedict[self.sites.get()] = 'LIKES'
+        else:
+            self.sitetolerancedict[self.sites.get()] = 'TOLERATES'
 
         self.fill_sitetolerances()
 
