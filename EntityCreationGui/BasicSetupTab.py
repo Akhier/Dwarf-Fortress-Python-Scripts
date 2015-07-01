@@ -110,14 +110,24 @@ class BasicSetup(tk.Frame):
         self.defaultsite.grid(row=12, column=2, sticky='w')
 
         # SITE_TOLERANCE
-        self.sitetollerancedict = {}
+        self.ToLi = tk.IntVar()
+        self.sitetolerancedict = {}
         self.sites = ttk.Combobox(self, values=self.sitetypelist)
-        self.sites.grid(row=14, column=0, sticky=('w', 'e'))
+        self.sites.grid(row=15, column=0, sticky=('w', 'e'))
         self.sites.set('DARK_FORTRESS')
-        self.like = ttk.Radiobutton(self, text='LIKES', value=1)
-        self.like.grid(row=15, column=0, sticky=('w'))
-        self.tolerate = ttk.Radiobutton(self, text='TOLERATES', value=2)
-        self.tolerate.grid(row=15, column=0, sticky=('e'))
+        self.like = ttk.Radiobutton(self, text='LIKES', variable=self.ToLi, value=1)
+        self.like.grid(row=16, column=0, sticky=('w'))
+        self.tolerate = ttk.Radiobutton(self, text='TOLERATES', variable=self.ToLi, value=2)
+        self.tolerate.grid(row=16, column=0, sticky=('e'))
+        self.ToLi.set(1)
+        self.toleratedsites = tkst.ScrolledText(self, state='disabled', height=5, width=50, wrap=tk.WORD)
+        self.toleratedsites.grid(row=14, column=1, columnspan=3, rowspan=4, sticky=('w', 'e'))
+        self.setsitetolerance = tk.Button(self, text='Set Site Tolerance',
+                                          command=lambda: self.add_sitetolerance())
+        self.setsitetolerance.grid(row=14, column=0, sticky=('w', 'e'))
+        self.removesitetolerance = tk.Button(self, text='Remove Site Tolerance',
+                                             command=lambda: self.remove_sitetolerance())
+        self.removesitetolerance.grid(row=17, column=0, sticky=('w', 'e'))
 
     def toggle_alladvtier(self):
         if self.indivcon.get():
