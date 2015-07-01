@@ -105,9 +105,9 @@ class BasicSetup(tk.Frame):
         self.removesupportedbiome.grid(row=11, column=0, sticky=('w', 'e'))
 
         # DEFAULT_SITE_TYPE
-        tk.Label(self, text='Default Site Type', justify='left').grid(row=12, column=0, sticky='w')
+        tk.Label(self, text='Default Site Type:   ', justify='left').grid(row=12, column=1, sticky='e')
         self.defaultsite = ttk.Combobox(self, values=self.sitetypelist)
-        self.defaultsite.grid(row=12, column=1, sticky='w')
+        self.defaultsite.grid(row=12, column=2, sticky='w')
 
         # SITE_TOLERANCE
         self.sitetollerancedict = {}
