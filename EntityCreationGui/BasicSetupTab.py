@@ -129,6 +129,21 @@ class BasicSetup(tk.Frame):
                                              command=lambda: self.remove_sitetolerance())
         self.removesitetolerance.grid(row=15, column=1, sticky=('w', 'e'))
 
+        # WORLD_CONSTRUCTION
+        self.constructionlabel = tk.Label(self, justify='center', text='World Construction Options').grid(row=16, column=0, columnspan=4, sticky=('w', 'e'))
+        self.roads = tk.IntVar()
+        self.roadconstruction = tk.Checkbutton(self, variable=self.roads, text='ROAD')
+        self.roadconstruction.grid(row=17, column=0, sticky='w')
+        self.tunnels = tk.IntVar()
+        self.tunnelconstruction = tk.Checkbutton(self, variable=self.tunnels, text='TUNNEL')
+        self.tunnelconstruction.grid(row=17, column=1, sticky='w')
+        self.bridges = tk.IntVar()
+        self.bridgeconstruction = tk.Checkbutton(self, variable=self.bridges, text='BRIDGE')
+        self.bridgeconstruction.grid(row=17, column=2, sticky='w')
+        self.walls = tk.IntVar()
+        self.wallconstruction = tk.Checkbutton(self, variable=self.walls, text='WALL')
+        self.wallconstruction.grid(row=17, column=3, sticky='w')
+
     def toggle_alladvtier(self):
         if self.indivcon.get():
             self.advtier.configure(state='disabled')
