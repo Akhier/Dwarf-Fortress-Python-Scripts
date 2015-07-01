@@ -112,8 +112,12 @@ class BasicSetup(tk.Frame):
         # SITE_TOLERANCE
         self.sitetollerancedict = {}
         self.sites = ttk.Combobox(self, values=self.sitetypelist)
-        self.sites.grid(row=13, column=0, sticky=('w', 'e'))
+        self.sites.grid(row=14, column=0, sticky=('w', 'e'))
         self.sites.set('DARK_FORTRESS')
+        self.like = ttk.Radiobutton(self, text='LIKES', value=1)
+        self.like.grid(row=15, column=0, sticky=('w'))
+        self.tolerate = ttk.Radiobutton(self, text='TOLERATES', value=2)
+        self.tolerate.grid(row=15, column=0, sticky=('e'))
 
     def toggle_alladvtier(self):
         if self.indivcon.get():
