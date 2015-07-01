@@ -113,7 +113,7 @@ class BasicSetup(tk.Frame):
         self.sitetollerancedict = {}
         self.sites = ttk.Combobox(self, values=self.sitetypelist)
         self.sites.grid(row=13, column=0, sticky=('w', 'e'))
-        self.set('DARK_FORTRESS')
+        self.sites.set('DARK_FORTRESS')
 
     def toggle_alladvtier(self):
         if self.indivcon.get():
