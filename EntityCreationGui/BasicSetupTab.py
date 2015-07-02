@@ -144,6 +144,23 @@ class BasicSetup(tk.Frame):
         self.wallconstruction = tk.Checkbutton(self, variable=self.walls, text='WALL')
         self.wallconstruction.grid(row=17, column=3, sticky='w')
 
+        # POPULATION
+        self.maxpoplabel = tk.Label(self, justify='center', text='MAX_POP_NUMBER').grid(row=18, column=0, sticky=('w', 'e'))
+        self.maxpop = tk.Spinbox(self, from_=0, to=9999999999999, justify='center')
+        self.maxpop.grid(row=19, column=0, sticky=('w', 'e'))
+        self.maxpop.delete(0, 1)
+        self.maxpop.insert(0, 500)
+        self.maxsitepoplabel = tk.Label(self, justify='center', text='MAX_SITE_POP_NUMBER').grid(row=18, column=1, sticky=('w', 'e'))
+        self.maxsitepop = tk.Spinbox(self, from_=0, to=9999999999999, justify='center')
+        self.maxsitepop.grid(row=19, column=1, sticky=('w', 'e'))
+        self.maxsitepop.delete(0, 1)
+        self.maxsitepop.insert(0, 200)
+        self.maxstartingcivlabel = tk.Label(self, justify='center', text='MAX_STARTING_CIV_NUMBER').grid(row=18, column=2, sticky=('w', 'e'))
+        self.maxstartingciv = tk.Spinbox(self, from_=0, to=300, justify='center')
+        self.maxstartingciv.grid(row=19, column=2, sticky=('w', 'e'))
+        self.maxstartingciv.delete(0, 1)
+        self.maxstartingciv.insert(0, 3)
+
     def toggle_alladvtier(self):
         if self.indivcon.get():
             self.advtier.configure(state='disabled')
