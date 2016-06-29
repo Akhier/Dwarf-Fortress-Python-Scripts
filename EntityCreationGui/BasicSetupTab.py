@@ -26,18 +26,20 @@ class BasicSetup(tk.Frame):
                                 'OCEAN_TEMPERATE']
         self.sitetypelist = ['DARK_FORTRESS', 'CAVE', 'CAVE_DETAILED', 'TREE_CITY', 'CITY']
 
-        # INDIV_CONTROLLABLE
-        self.indivcon = tk.IntVar()
-        self.indivcontrollable = tk.Checkbutton(self, variable=self.indivcon,
-                                                text='Indiv Controllable',
-                                                command=lambda: self.toggle_alladvtier())
-        self.indivcontrollable.grid(row=0, column=0, sticky='w')
+        # OUTSIDER_CONTROLLABLE
+        self.outcon = tk.IntVar()
+        self.outsidercontrollable = tk.Checkbutton(self, variable=self.outcon,
+                                                   text='Outsider '
+                                                   'Controllable',
+                                                   command=lambda:
+                                                   self.toggle_alladvtier())
+        self.outsidercontrollable.grid(row=0, column=0, sticky='w')
 
-        # CIV_CONTROLLABLE
-        self.civcon = tk.IntVar()
-        self.civcontrollable = tk.Checkbutton(self, variable=self.civcon,
-                                              text='Civ Controllable')
-        self.civcontrollable.grid(row=0, column=1, sticky='w')
+        # SITE_CONTROLLABLE
+        self.sitecon = tk.IntVar()
+        self.sitecontrollable = tk.Checkbutton(self, variable=self.sitecon,
+                                               text='Site Controllable')
+        self.sitecontrollable.grid(row=0, column=1, sticky='w')
 
         # ADVENTURE_TIER
         self.advtiernum = tk.Spinbox(self, from_=1, to=9001)
@@ -162,7 +164,7 @@ class BasicSetup(tk.Frame):
         self.maxstartingciv.insert(0, 3)
 
     def toggle_alladvtier(self):
-        if self.indivcon.get():
+        if self.outcon.get():
             self.advtier.configure(state='disabled')
             self.advtiernum.configure(state='disabled')
         else:
