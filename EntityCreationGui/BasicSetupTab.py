@@ -9,30 +9,37 @@ class BasicSetup(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent
-        self.singlebiomelist = ['MOUNTAIN', 'MARSH_TEMPERATE_FRESHWATER', 'SWAMP_TROPICAL_SALTWATER', 'MARSH_TROPICAL_SALTWATER',
-                                'FOREST_TEMPERATE_BROADLEAF', 'FOREST_TROPICAL_MOIST_BROADLEAF', 'SHRUBLAND_TEMPERATE',
-                                'DESERT_BADLAND', 'OCEAN_ARCTIC', 'POOL_TEMPERATE_SALTWATER', 'POOL_TROPICAL_SALTWATER',
-                                'LAKE_TEMPERATE_SALTWATER', 'LAKE_TROPICAL_SALTWATER', 'RIVER_TEMPERATE_SALTWATER',
-                                'RIVER_TROPICAL_SALTWATER', 'GLACIER', 'MARSH_TEMPERATE_SALTWATER', 'SWAMP_MANGROVE',
-                                'FOREST_TAIGA', 'FOREST_TROPICAL_CONIFER', 'GRASSLAND_TEMPERATE', 'GRASSLAND_TROPICAL',
-                                'DESERT_ROCK', 'POOL_TEMPERATE_FRESHWATER', 'POOL_TROPICAL_FRESHWATER', 'LAKE_TEMPERATE_FRESHWATER',
-                                'LAKE_TROPICAL_FRESHWATER', 'RIVER_TEMPERATE_FRESHWATER', 'RIVER_TROPICAL_FRESHWATER',
-                                'SUBTERRANEAN_WATER', 'TUNDRA', 'SWAMP_TROPICAL_FRESHWATER', 'MARSH_TROPICAL_FRESHWATER',
-                                'FOREST_TEMPERATE_CONIFER', 'FOREST_TROPICAL_DRY_BROADLEAF', 'SAVANNA_TEMPERATE',
-                                'SAVANNA_TROPICAL', 'DESERT_SAND', 'POOL_TEMPERATE_BRACKISHWATER', 'POOL_TROPICAL_BRACKISHWATER',
-                                'LAKE_TEMPERATE_BRACKISHWATER', 'LAKE_TROPICAL_BRACKISHWATER', 'RIVER_TEMPERATE_BRACKISHWATER',
-                                'RIVER_TROPICAL_BRACKISHWATER', 'SUBTERRANEAN_CHASM', 'SWAMP_TEMPERATE_FRESHWATER',
-                                'SHRUBLAND_TROPICAL', 'OCEAN_TROPICAL', 'SUBTERRANEAN_LAVA', 'SWAMP_TEMPERATE_SALTWATER',
-                                'OCEAN_TEMPERATE']
-        self.sitetypelist = ['DARK_FORTRESS', 'CAVE', 'CAVE_DETAILED', 'TREE_CITY', 'CITY']
+        self.singlebiomelist = [
+            'MOUNTAIN', 'MARSH_TEMPERATE_FRESHWATER',
+            'SWAMP_TROPICAL_SALTWATER', 'MARSH_TROPICAL_SALTWATER',
+            'FOREST_TEMPERATE_BROADLEAF', 'FOREST_TROPICAL_MOIST_BROADLEAF',
+            'SHRUBLAND_TEMPERATE', 'DESERT_BADLAND', 'OCEAN_ARCTIC',
+            'POOL_TEMPERATE_SALTWATER', 'POOL_TROPICAL_SALTWATER',
+            'LAKE_TEMPERATE_SALTWATER', 'LAKE_TROPICAL_SALTWATER',
+            'RIVER_TEMPERATE_SALTWATER', 'RIVER_TROPICAL_SALTWATER',
+            'GLACIER', 'MARSH_TEMPERATE_SALTWATER', 'SWAMP_MANGROVE',
+            'FOREST_TAIGA', 'FOREST_TROPICAL_CONIFER', 'GRASSLAND_TEMPERATE',
+            'GRASSLAND_TROPICAL', 'DESERT_ROCK', 'POOL_TEMPERATE_FRESHWATER',
+            'POOL_TROPICAL_FRESHWATER', 'LAKE_TEMPERATE_FRESHWATER',
+            'LAKE_TROPICAL_FRESHWATER', 'RIVER_TEMPERATE_FRESHWATER',
+            'RIVER_TROPICAL_FRESHWATER', 'SUBTERRANEAN_WATER', 'TUNDRA',
+            'SWAMP_TROPICAL_FRESHWATER', 'MARSH_TROPICAL_FRESHWATER',
+            'FOREST_TEMPERATE_CONIFER', 'FOREST_TROPICAL_DRY_BROADLEAF',
+            'SAVANNA_TEMPERATE', 'SAVANNA_TROPICAL', 'DESERT_SAND',
+            'POOL_TEMPERATE_BRACKISHWATER', 'POOL_TROPICAL_BRACKISHWATER',
+            'LAKE_TEMPERATE_BRACKISHWATER', 'LAKE_TROPICAL_BRACKISHWATER',
+            'RIVER_TEMPERATE_BRACKISHWATER', 'RIVER_TROPICAL_BRACKISHWATER',
+            'SUBTERRANEAN_CHASM', 'SWAMP_TEMPERATE_FRESHWATER',
+            'SHRUBLAND_TROPICAL', 'OCEAN_TROPICAL', 'SUBTERRANEAN_LAVA',
+            'SWAMP_TEMPERATE_SALTWATER', 'OCEAN_TEMPERATE']
+        self.sitetypelist = ['DARK_FORTRESS', 'CAVE',
+                             'CAVE_DETAILED', 'TREE_CITY', 'CITY']
 
         # OUTSIDER_CONTROLLABLE
         self.outcon = tk.IntVar()
-        self.outsidercontrollable = tk.Checkbutton(self, variable=self.outcon,
-                                                   text='Outsider '
-                                                   'Controllable',
-                                                   command=lambda:
-                                                   self.toggle_popcon())
+        self.outsidercontrollable = tk.Checkbutton(
+            self, variable=self.outcon, text='Outsider Controllable',
+            command=lambda: self.toggle_popcon())
         self.outsidercontrollable.grid(row=0, column=0, sticky='w')
 
         # ALL_MAIN_POPS_CONTROLLABLE
@@ -48,9 +55,8 @@ class BasicSetup(tk.Frame):
         self.sitecontrollable.grid(row=0, column=2, sticky='w')
 
         # CREATURE
-        self.creaturelabel = tk.Label(self, justify='left',
-                                      text='Creature:').grid(row=0, column=3,
-                                                             sticky='e')
+        self.creaturelabel = tk.Label(self, justify='left', text='Creature:')
+        self.creaturelabel.grid(row=0, column=3, sticky='e')
         self.creature = ''
         self.creatureentry = tk.Entry(self, textvariable=self.creature)
         self.creatureentry.grid(row=0, column=4, sticky='w')
@@ -60,22 +66,19 @@ class BasicSetup(tk.Frame):
         self.startbiome = ttk.Combobox(self, values=self.singlebiomelist)
         self.startbiome.grid(row=2, column=0, sticky=('w', 'e'))
         self.startbiome.set('MOUNTAIN')
-        self.startbiomes = tkst.ScrolledText(self, state='disabled',
-                                             height=4, width=50, wrap=tk.WORD)
+        self.startbiomes = tkst.ScrolledText(
+            self, state='disabled', height=4, width=50, wrap=tk.WORD)
         self.startbiomes.grid(row=1, column=1, columnspan=4,
                               rowspan=3, sticky=('w', 'e'))
-        self.setstartbiome = tk.Button(self, text='Set Start Biome',
-                                       command=lambda biome=self.startbiome,
-                                       biomes=self.startbiomes,
-                                       list=self.startinglist:
-                                       self.add_biome(biome, biomes, list))
+        self.setstartbiome = tk.Button(
+            self, text='Set Start Biome', command=lambda biome=self.startbiome,
+            biomes=self.startbiomes, list=self.startinglist:
+            self.add_biome(biome, biomes, list))
         self.setstartbiome.grid(row=1, column=0, sticky=('w', 'e'))
-        self.removestartbiome = tk.Button(self, text='Remove Start Biome',
-                                          command=lambda biome=self.startbiome,
-                                          biomes=self.startbiomes,
-                                          list=self.startinglist:
-                                          self.remove_biome(biome, biomes,
-                                                            list))
+        self.removestartbiome = tk.Button(
+            self, text='Remove Start Biome',
+            command=lambda biome=self.startbiome, biomes=self.startbiomes,
+            list=self.startinglist: self.remove_biome(biome, biomes, list))
         self.removestartbiome.grid(row=3, column=0, sticky=('w', 'e'))
 
         # SETTLEMENT_BIOME
@@ -83,18 +86,24 @@ class BasicSetup(tk.Frame):
         self.settlementbiome = ttk.Combobox(self, values=self.singlebiomelist)
         self.settlementbiome.grid(row=5, column=0, sticky=('w', 'e'))
         self.settlementbiome.set('MOUNTAIN')
-        self.settlementbiomes = tkst.ScrolledText(self, state='disabled',
-                                                  height=4, width=30,
-                                                  wrap=tk.WORD)
+        self.settlementbiomes = tkst.ScrolledText(
+            self, state='disabled', height=4, width=30, wrap=tk.WORD)
         self.settlementbiomes.grid(row=4, column=1, columnspan=4,
                                    rowspan=3, sticky=('w', 'e'))
-        self.setsettlementbiome = tk.Button(self, text='Set Settlement Biome',
-                                            command=lambda settlementbiome=self.settlementbiome, settlementbiomes=self.settlementbiomes,
-                                            list=self.settlementlist: self.add_settlementbiome(settlementbiome, settlementbiomes, list))
+        self.setsettlementbiome = tk.Button(
+            self, text='Set Settlement Biome',
+            command=lambda settlementbiome=self.settlementbiome,
+            settlementbiomes=self.settlementbiomes,
+            list=self.settlementlist: self.add_settlementbiome(
+                settlementbiome, settlementbiomes, list))
         self.setsettlementbiome.grid(row=4, column=0, sticky=('w', 'e'))
-        self.removesettlementbiome = tk.Button(self, text='Remove Settlement Biome',
-                                               command=lambda settlementbiome=self.settlementbiome, settlementbiomes=self.settlementbiomes,
-                                               list=self.settlementlist: self.remove_settlementbiome(settlementbiome, settlementbiomes, list))
+        self.removesettlementbiome = tk.Button(
+            self, text='Remove Settlement Biome',
+            command=lambda settlementbiome=self.settlementbiome,
+            settlementbiomes=self.settlementbiomes,
+            list=self.settlementlist:
+            self.remove_settlementbiome(
+                settlementbiome, settlementbiomes, list))
         self.removesettlementbiome.grid(row=6, column=0, sticky=('w', 'e'))
 
         # BIOME_SUPPORT
@@ -114,10 +123,9 @@ class BasicSetup(tk.Frame):
                                            command=lambda:
                                            self.add_supportedbiome())
         self.setsupportedbiome.grid(row=7, column=0, sticky=('w', 'e'))
-        self.removesupportedbiome = tk.Button(self,
-                                              text='Remove Supported Biome',
-                                              command=lambda:
-                                              self.remove_supportedbiome())
+        self.removesupportedbiome = tk.Button(
+            self, text='Remove Supported Biome',
+            command=lambda: self.remove_supportedbiome())
         self.removesupportedbiome.grid(row=10, column=0, sticky=('w', 'e'))
 
         # SITE_TOLERANCE
@@ -133,19 +141,17 @@ class BasicSetup(tk.Frame):
                                         variable=self.ToLi, value=2)
         self.tolerate.grid(row=12, column=0, sticky=('e'))
         self.ToLi.set(1)
-        self.toleratedsites = tkst.ScrolledText(self, state='disabled',
-                                                height=3, width=30,
-                                                wrap=tk.WORD)
+        self.toleratedsites = tkst.ScrolledText(
+            self, state='disabled', height=3, width=30, wrap=tk.WORD)
         self.toleratedsites.grid(row=11, column=2, columnspan=3,
                                  rowspan=2, sticky=('w', 'e'))
         self.setsitetolerance = tk.Button(self, text='Set Site Tolerance',
                                           command=lambda:
                                           self.add_sitetolerance())
         self.setsitetolerance.grid(row=11, column=1, sticky=('w', 'e'))
-        self.removesitetolerance = tk.Button(self,
-                                             text='Remove Site Tolerance',
-                                             command=lambda:
-                                             self.remove_sitetolerance())
+        self.removesitetolerance = tk.Button(
+            self, text='Remove Site Tolerance',
+            command=lambda: self.remove_sitetolerance())
         self.removesitetolerance.grid(row=12, column=1, sticky=('w', 'e'))
 
         # DEFAULT_SITE_TYPE
