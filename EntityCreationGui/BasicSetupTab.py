@@ -32,150 +32,136 @@ class BasicSetup(tk.Frame):
                                                    text='Outsider '
                                                    'Controllable',
                                                    command=lambda:
-                                                   self.toggle_alladvtier())
+                                                   self.toggle_popcon())
         self.outsidercontrollable.grid(row=0, column=0, sticky='w')
+
+        # ALL_MAIN_POPS_CONTROLLABLE
+        self.popconcheck = tk.IntVar()
+        self.popcon = tk.Checkbutton(self, variable=self.popconcheck,
+                                     text='All Main Pops Controllable')
+        self.popcon.grid(row=0, column=1, sticky='w')
 
         # SITE_CONTROLLABLE
         self.sitecon = tk.IntVar()
         self.sitecontrollable = tk.Checkbutton(self, variable=self.sitecon,
                                                text='Site Controllable')
-        self.sitecontrollable.grid(row=0, column=1, sticky='w')
-
-        # ADVENTURE_TIER
-        self.advtiernum = tk.Spinbox(self, from_=1, to=9001)
-        self.advtiercheck = tk.IntVar()
-        self.advtier = tk.Checkbutton(self, variable=self.advtiercheck,
-                                      text='Adventure Tier',
-                                      command=lambda: self.toggle_advtier())
-        self.advtier.grid(row=1, column=0, sticky='w')
-        self.advtiernum.delete(0, 'end')
-        self.advtiernum.insert(0, 4)
-        self.advtiernum.configure(state='disabled')
-        self.advtiernum.grid(row=1, column=1, sticky='w')
+        self.sitecontrollable.grid(row=0, column=2, sticky='w')
 
         # CREATURE
-        self.creaturelabel = tk.Label(self, justify='left', text='Creature:').grid(row=1, column=2, sticky='e')
+        self.creaturelabel = tk.Label(self, justify='left', text='Creature:').grid(row=0, column=3, sticky='e')
         self.creature = ''
-        self.creatureentry = tk.Entry(self, textvariable=self.creature).grid(row=1, column=3, sticky='w')
+        self.creatureentry = tk.Entry(self, textvariable=self.creature).grid(row=0, column=4, sticky='w')
 
         # START_BIOME|EXCLUSIVE_START_BIOME
         self.startinglist = []
         self.startbiome = ttk.Combobox(self, values=self.singlebiomelist)
-        self.startbiome.grid(row=3, column=0, sticky=('w', 'e'))
+        self.startbiome.grid(row=2, column=0, sticky=('w', 'e'))
         self.startbiome.set('MOUNTAIN')
         self.startbiomes = tkst.ScrolledText(self, state='disabled', height=4, width=50, wrap=tk.WORD)
-        self.startbiomes.grid(row=2, column=1, columnspan=3, rowspan=3, sticky=('w', 'e'))
+        self.startbiomes.grid(row=1, column=1, columnspan=4, rowspan=3, sticky=('w', 'e'))
         self.setstartbiome = tk.Button(self, text='Set Start Biome',
                                        command=lambda biome=self.startbiome, biomes=self.startbiomes,
                                        list=self.startinglist: self.add_biome(biome, biomes, list))
-        self.setstartbiome.grid(row=2, column=0, sticky=('w', 'e'))
+        self.setstartbiome.grid(row=1, column=0, sticky=('w', 'e'))
         self.removestartbiome = tk.Button(self, text='Remove Start Biome',
                                           command=lambda biome=self.startbiome, biomes=self.startbiomes,
                                           list=self.startinglist: self.remove_biome(biome, biomes, list))
-        self.removestartbiome.grid(row=4, column=0, sticky=('w', 'e'))
+        self.removestartbiome.grid(row=3, column=0, sticky=('w', 'e'))
 
         # SETTLEMENT_BIOME
         self.settlementlist = []
         self.settlementbiome = ttk.Combobox(self, values=self.singlebiomelist)
-        self.settlementbiome.grid(row=6, column=0, sticky=('w', 'e'))
+        self.settlementbiome.grid(row=5, column=0, sticky=('w', 'e'))
         self.settlementbiome.set('MOUNTAIN')
-        self.settlementbiomes = tkst.ScrolledText(self, state='disabled', height=4, width=50, wrap=tk.WORD)
-        self.settlementbiomes.grid(row=5, column=1, columnspan=3, rowspan=3, sticky=('w', 'e'))
+        self.settlementbiomes = tkst.ScrolledText(self, state='disabled', height=4, width=30, wrap=tk.WORD)
+        self.settlementbiomes.grid(row=4, column=1, columnspan=4, rowspan=3, sticky=('w', 'e'))
         self.setsettlementbiome = tk.Button(self, text='Set Settlement Biome',
                                             command=lambda settlementbiome=self.settlementbiome, settlementbiomes=self.settlementbiomes,
                                             list=self.settlementlist: self.add_settlementbiome(settlementbiome, settlementbiomes, list))
-        self.setsettlementbiome.grid(row=5, column=0, sticky=('w', 'e'))
+        self.setsettlementbiome.grid(row=4, column=0, sticky=('w', 'e'))
         self.removesettlementbiome = tk.Button(self, text='Remove Settlement Biome',
                                                command=lambda settlementbiome=self.settlementbiome, settlementbiomes=self.settlementbiomes,
                                                list=self.settlementlist: self.remove_settlementbiome(settlementbiome, settlementbiomes, list))
-        self.removesettlementbiome.grid(row=7, column=0, sticky=('w', 'e'))
+        self.removesettlementbiome.grid(row=6, column=0, sticky=('w', 'e'))
 
         # BIOME_SUPPORT
         self.supporteddict = {}
         self.frequencyofbiome = tk.Spinbox(self, from_=0, to=10, justify='center')
-        self.frequencyofbiome.grid(row=10, column=0, sticky=('w', 'e'))
+        self.frequencyofbiome.grid(row=9, column=0, sticky=('w', 'e'))
         self.supportedbiome = ttk.Combobox(self, values=self.singlebiomelist)
-        self.supportedbiome.grid(row=9, column=0, sticky=('w', 'e'))
+        self.supportedbiome.grid(row=8, column=0, sticky=('w', 'e'))
         self.supportedbiome.set('MOUNTAIN')
-        self.supportedbiomes = tkst.ScrolledText(self, state='disabled', height=5, width=50, wrap=tk.WORD)
-        self.supportedbiomes.grid(row=8, column=1, columnspan=3, rowspan=4, sticky=('w', 'e'))
+        self.supportedbiomes = tkst.ScrolledText(self, state='disabled', height=5, width=30, wrap=tk.WORD)
+        self.supportedbiomes.grid(row=7, column=1, columnspan=4, rowspan=4, sticky=('w', 'e'))
         self.setsupportedbiome = tk.Button(self, text='Set Supported Biome',
                                            command=lambda: self.add_supportedbiome())
-        self.setsupportedbiome.grid(row=8, column=0, sticky=('w', 'e'))
+        self.setsupportedbiome.grid(row=7, column=0, sticky=('w', 'e'))
         self.removesupportedbiome = tk.Button(self, text='Remove Supported Biome',
                                               command=lambda: self.remove_supportedbiome())
-        self.removesupportedbiome.grid(row=11, column=0, sticky=('w', 'e'))
-
-        # DEFAULT_SITE_TYPE
-        tk.Label(self, text='Default Site Type:   ', justify='left').grid(row=12, column=1, sticky='e')
-        self.defaultsite = ttk.Combobox(self, values=self.sitetypelist)
-        self.defaultsite.grid(row=12, column=2, sticky='w')
+        self.removesupportedbiome.grid(row=10, column=0, sticky=('w', 'e'))
 
         # SITE_TOLERANCE
         self.ToLi = tk.IntVar()
         self.sitetolerancedict = {}
         self.sites = ttk.Combobox(self, values=self.sitetypelist)
-        self.sites.grid(row=14, column=0, sticky=('w', 'e'))
+        self.sites.grid(row=11, column=0, sticky=('w', 'e'))
         self.sites.set('DARK_FORTRESS')
         self.like = ttk.Radiobutton(self, text='LIKES', variable=self.ToLi, value=1)
-        self.like.grid(row=15, column=0, sticky=('w'))
+        self.like.grid(row=12, column=0, sticky=('w'))
         self.tolerate = ttk.Radiobutton(self, text='TOLERATES', variable=self.ToLi, value=2)
-        self.tolerate.grid(row=15, column=0, sticky=('e'))
+        self.tolerate.grid(row=12, column=0, sticky=('e'))
         self.ToLi.set(1)
-        self.toleratedsites = tkst.ScrolledText(self, state='disabled', height=3, width=50, wrap=tk.WORD)
-        self.toleratedsites.grid(row=14, column=2, columnspan=2, rowspan=2, sticky=('w', 'e'))
+        self.toleratedsites = tkst.ScrolledText(self, state='disabled', height=3, width=30, wrap=tk.WORD)
+        self.toleratedsites.grid(row=11, column=2, columnspan=3, rowspan=2, sticky=('w', 'e'))
         self.setsitetolerance = tk.Button(self, text='Set Site Tolerance',
                                           command=lambda: self.add_sitetolerance())
-        self.setsitetolerance.grid(row=14, column=1, sticky=('w', 'e'))
+        self.setsitetolerance.grid(row=11, column=1, sticky=('w', 'e'))
         self.removesitetolerance = tk.Button(self, text='Remove Site Tolerance',
                                              command=lambda: self.remove_sitetolerance())
-        self.removesitetolerance.grid(row=15, column=1, sticky=('w', 'e'))
+        self.removesitetolerance.grid(row=12, column=1, sticky=('w', 'e'))
+
+        # DEFAULT_SITE_TYPE
+        tk.Label(self, text='Default Site Type:   ', justify='left').grid(row=13, column=1, sticky='e')
+        self.defaultsite = ttk.Combobox(self, values=self.sitetypelist)
+        self.defaultsite.grid(row=13, column=2, sticky='w')
 
         # WORLD_CONSTRUCTION
-        self.constructionlabel = tk.Label(self, justify='center', text='World Construction Options').grid(row=16, column=0, columnspan=4, sticky=('w', 'e'))
+        self.constructionlabel = tk.Label(self, justify='center', text='World Construction Options').grid(row=15, column=0, columnspan=4, sticky=('w', 'e'))
         self.roads = tk.IntVar()
         self.roadconstruction = tk.Checkbutton(self, variable=self.roads, text='ROAD')
-        self.roadconstruction.grid(row=17, column=0, sticky='w')
+        self.roadconstruction.grid(row=16, column=0, sticky='w')
         self.tunnels = tk.IntVar()
         self.tunnelconstruction = tk.Checkbutton(self, variable=self.tunnels, text='TUNNEL')
-        self.tunnelconstruction.grid(row=17, column=1, sticky='w')
+        self.tunnelconstruction.grid(row=16, column=1, sticky='w')
         self.bridges = tk.IntVar()
         self.bridgeconstruction = tk.Checkbutton(self, variable=self.bridges, text='BRIDGE')
-        self.bridgeconstruction.grid(row=17, column=2, sticky='w')
+        self.bridgeconstruction.grid(row=16, column=2, sticky='w')
         self.walls = tk.IntVar()
         self.wallconstruction = tk.Checkbutton(self, variable=self.walls, text='WALL')
-        self.wallconstruction.grid(row=17, column=3, sticky='w')
+        self.wallconstruction.grid(row=16, column=3, sticky='w')
 
         # POPULATION
-        self.maxpoplabel = tk.Label(self, justify='center', text='MAX_POP_NUMBER').grid(row=18, column=0, sticky=('w', 'e'))
+        self.maxpoplabel = tk.Label(self, justify='center', text='MAX_POP_NUMBER').grid(row=17, column=0, sticky=('w', 'e'))
         self.maxpop = tk.Spinbox(self, from_=0, to=9999999999999, justify='center')
-        self.maxpop.grid(row=19, column=0, sticky=('w', 'e'))
+        self.maxpop.grid(row=18, column=0, sticky=('w', 'e'))
         self.maxpop.delete(0, 'end')
         self.maxpop.insert(0, 500)
-        self.maxsitepoplabel = tk.Label(self, justify='center', text='MAX_SITE_POP_NUMBER').grid(row=18, column=1, sticky=('w', 'e'))
+        self.maxsitepoplabel = tk.Label(self, justify='center', text='MAX_SITE_POP_NUMBER').grid(row=17, column=1, sticky=('w', 'e'))
         self.maxsitepop = tk.Spinbox(self, from_=0, to=9999999999999, justify='center')
-        self.maxsitepop.grid(row=19, column=1, sticky=('w', 'e'))
+        self.maxsitepop.grid(row=18, column=1, sticky=('w', 'e'))
         self.maxsitepop.delete(0, 'end')
         self.maxsitepop.insert(0, 200)
-        self.maxstartingcivlabel = tk.Label(self, justify='center', text='MAX_STARTING_CIV_NUMBER').grid(row=18, column=2, sticky=('w', 'e'))
+        self.maxstartingcivlabel = tk.Label(self, justify='center', text='MAX_STARTING_CIV_NUMBER').grid(row=17, column=2, sticky=('w', 'e'))
         self.maxstartingciv = tk.Spinbox(self, from_=0, to=300, justify='center')
-        self.maxstartingciv.grid(row=19, column=2, sticky=('w', 'e'))
+        self.maxstartingciv.grid(row=18, column=2, sticky=('w', 'e'))
         self.maxstartingciv.delete(0, 1)
         self.maxstartingciv.insert(0, 3)
 
-    def toggle_alladvtier(self):
+    def toggle_popcon(self):
         if self.outcon.get():
-            self.advtier.configure(state='disabled')
-            self.advtiernum.configure(state='disabled')
+            self.popcon.configure(state='disabled')
         else:
-            self.advtier.configure(state='normal')
-            self.toggle_advtier()
-
-    def toggle_advtier(self):
-        if self.advtiercheck.get():
-            self.advtiernum.configure(state='normal')
-        else:
-            self.advtiernum.configure(state='disabled')
+            self.popcon.configure(state='normal')
 
     def fill_biomes(self, biomes, list):
         biomes.config(state='normal')
@@ -220,7 +206,8 @@ class BasicSetup(tk.Frame):
         self.supportedbiomes.config(state='disabled')
 
     def add_supportedbiome(self):
-        self.supporteddict[self.supportedbiome.get()] = self.frequencyofbiome.get()
+        temp = self.frequencyofbiome.get()
+        self.supporteddict[self.supportedbiome.get()] = temp
 
         self.fill_supportedbiomes()
 
