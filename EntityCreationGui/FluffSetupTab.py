@@ -7,6 +7,16 @@ class FluffSetup(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent
+        note = ttk.Notebook(self)
+        flavorsetup = FlavorSetup(self, padx=6, pady=6)
+        note.add(flavorsetup, text='Flavor')
+        note.grid()
+
+
+class FlavorSetup(tk.Frame):
+    def __init__(self, parent, *args, **kwargs):
+        tk.Frame.__init__(self, parent, *args, **kwargs)
+        self.parent = parent
 
         # CURRENCY
         self.currencydict = {}
@@ -20,7 +30,7 @@ class FluffSetup(tk.Frame):
         self.currencyvalue.delete(0, 'end')
         self.currencyvalue.insert(0, 'value')
         self.currencydisplay = tkst.ScrolledText(self, state='disabled',
-                                                 height=5, width=50,
+                                                 height=5, width=70,
                                                  wrap=tk.WORD)
         self.currencydisplay.grid(row=0, column=1, columnspan=3,
                                   rowspan=4, sticky=('w', 'e'))
