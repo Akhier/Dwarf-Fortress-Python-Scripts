@@ -7,6 +7,11 @@ class FlavorSetup(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent
+        self.artfacetlist = ['OWN_RACE', 'FANCIFUL', 'EVIL', 'GOOD']
+        self.artimagelist = ['CREATURE', 'PLANT', 'TREE', 'SHAPE', 'ITEM']
+        self.itemimprovementlist = [
+            'ART_IMAGE', 'COVERED', 'RINGS_HANGING', 'BANDS', 'SPIKES',
+            'ITEMSPECIFIC', 'THREAD', 'CLOTH', 'SEWN_IMAGE']
 
         # CURRENCY
         self.currencydict = {}
@@ -72,85 +77,55 @@ class FlavorSetup(tk.Frame):
             self, justify='center', text='Art Facet Modifiers (256 neutral)')
         self.artfacetlabel.grid(
             row=6, column=0, sticky=('w', 'e'), columnspan=4)
-        self.ownracefacetlabel = tk.Label(
-            self, justify='left', text='Own Race:')
-        self.ownracefacetlabel.grid(row=7, column=0, sticky='e')
-        self.ownracefacet = tk.Spinbox(
+        self.facetdict = {}
+        self.facetamount = tk.Spinbox(
             self, from_=0, to=25600, justify='center')
-        self.ownracefacet.grid(row=7, column=1, sticky='w')
-        self.ownracefacet.delete(0, 'end')
-        self.ownracefacet.insert(0, 256)
-        self.fancifulfacetlabel = tk.Label(
-            self, justify='left', text='Fanciful:')
-        self.fancifulfacetlabel.grid(row=7, column=2, sticky='e')
-        self.fancifulfacet = tk.Spinbox(
-            self, from_=0, to=25600, justify='center')
-        self.fancifulfacet.grid(row=7, column=3, sticky='w')
-        self.fancifulfacet.delete(0, 'end')
-        self.fancifulfacet.insert(0, 256)
-        self.evilfacetlabel = tk.Label(
-            self, justify='left', text='Evil:')
-        self.evilfacetlabel.grid(row=8, column=0, sticky='e')
-        self.evilfacet = tk.Spinbox(
-            self, from_=0, to=25600, justify='center')
-        self.evilfacet.grid(row=8, column=1, sticky='w')
-        self.evilfacet.delete(0, 'end')
-        self.evilfacet.insert(0, 256)
-        self.goodfacetlabel = tk.Label(
-            self, justify='left', text='Good:')
-        self.goodfacetlabel.grid(row=8, column=2, sticky='e')
-        self.goodfacet = tk.Spinbox(
-            self, from_=0, to=25600, justify='center')
-        self.goodfacet.grid(row=8, column=3, sticky='w')
-        self.goodfacet.delete(0, 'end')
-        self.goodfacet.insert(0, 256)
+        self.facetamount.grid(row=7, column=2, sticky=('w', 'e'))
+        self.facetamount.delete(0, 'end')
+        self.facetamount.insert(0, 256)
+        self.artfacet = ttk.Combobox(self, values=self.artfacetlist)
+        self.artfacet.grid(row=7, column=1, sticky=('w', 'e'))
+        self.artfacet.set('OWN_RACE')
+        self.artfacettxt = ''
+        self.artfacets = tk.Entry(self, textvariable=self.artfacettxt,
+                                  state='disabled', justify='center')
+        self.artfacets.grid(
+            row=8, column=0, columnspan=4, sticky=('w', 'e'))
+        self.setartfacet = tk.Button(
+            self, text='Set Facet', command=lambda: self.add_artfacet())
+        self.setartfacet.grid(row=7, column=0, sticky=('w', 'e'))
+        self.removeartfacet = tk.Button(
+            self, text='Remove Facet',
+            command=lambda: self.remove_artfacet())
+        self.removeartfacet.grid(row=7, column=3, sticky=('w', 'e'))
 
         # ART_IMAGE_ELEMENT_MODIFIER
-        self.artelementlabel = tk.Label(
+        self.artimagelabel = tk.Label(
             self, justify='center',
-            text='Art Image Element Modifiers (256 neutral)')
-        self.artelementlabel.grid(
+            text='Art Image Emage Modifiers (256 neutral)')
+        self.artimagelabel.grid(
             row=9, column=0, sticky=('w', 'e'), columnspan=4)
-        self.creatureelementlabel = tk.Label(
-            self, justify='left', text='Creature:')
-        self.creatureelementlabel.grid(row=10, column=0, sticky='e')
-        self.creatureelement = tk.Spinbox(
+        self.imagedict = {}
+        self.imageamount = tk.Spinbox(
             self, from_=0, to=25600, justify='center')
-        self.creatureelement.grid(row=10, column=1, sticky='w')
-        self.creatureelement.delete(0, 'end')
-        self.creatureelement.insert(0, 256)
-        self.plantelementlabel = tk.Label(
-            self, justify='left', text='Plant:')
-        self.plantelementlabel.grid(row=10, column=2, sticky='e')
-        self.plantelement = tk.Spinbox(
-            self, from_=0, to=25600, justify='center')
-        self.plantelement.grid(row=10, column=3, sticky='w')
-        self.plantelement.delete(0, 'end')
-        self.plantelement.insert(0, 256)
-        self.treeelementlabel = tk.Label(
-            self, justify='left', text='Tree:')
-        self.treeelementlabel.grid(row=11, column=0, sticky='e')
-        self.treeelement = tk.Spinbox(
-            self, from_=0, to=25600, justify='center')
-        self.treeelement.grid(row=11, column=1, sticky='w')
-        self.treeelement.delete(0, 'end')
-        self.treeelement.insert(0, 256)
-        self.shapeelementlabel = tk.Label(
-            self, justify='left', text='Shape:')
-        self.shapeelementlabel.grid(row=11, column=2, sticky='e')
-        self.shapeelement = tk.Spinbox(
-            self, from_=0, to=25600, justify='center')
-        self.shapeelement.grid(row=11, column=3, sticky='w')
-        self.shapeelement.delete(0, 'end')
-        self.shapeelement.insert(0, 256)
-        self.itemelementlabel = tk.Label(
-            self, justify='left', text='Item:')
-        self.itemelementlabel.grid(row=12, column=0, sticky='e')
-        self.itemelement = tk.Spinbox(
-            self, from_=0, to=25600, justify='center')
-        self.itemelement.grid(row=12, column=1, sticky='w')
-        self.itemelement.delete(0, 'end')
-        self.itemelement.insert(0, 256)
+        self.imageamount.grid(row=10, column=2, sticky=('w', 'e'))
+        self.imageamount.delete(0, 'end')
+        self.imageamount.insert(0, 256)
+        self.artimage = ttk.Combobox(self, values=self.artimagelist)
+        self.artimage.grid(row=10, column=1, sticky=('w', 'e'))
+        self.artimage.set('CREATURE')
+        self.artimagetxt = ''
+        self.artimages = tk.Entry(self, textvariable=self.artimagetxt,
+                                  state='disabled', justify='center')
+        self.artimages.grid(
+            row=11, column=0, columnspan=4, sticky=('w', 'e'))
+        self.setartimage = tk.Button(
+            self, text='Set Image', command=lambda: self.add_artimage())
+        self.setartimage.grid(row=10, column=0, sticky=('w', 'e'))
+        self.removeartimage = tk.Button(
+            self, text='Remove Image',
+            command=lambda: self.remove_artimage())
+        self.removeartimage.grid(row=10, column=3, sticky=('w', 'e'))
 
     def add_currencytype(self):
         self.curmat = self.currencymaterial.get()
@@ -173,6 +148,50 @@ class FlavorSetup(tk.Frame):
         self.currencydisplay.delete('1.0', tk.END)
         self.currencydisplay.insert('1.0', string)
         self.currencydisplay.config(state='disabled')
+
+    def add_artfacet(self):
+        temp = self.facetamount.get()
+        self.facetdict[self.artfacet.get()] = temp
+
+        self.fill_artfacet()
+
+    def remove_artfacet(self):
+        if self.artfacet.get() in self.facetdict:
+            self.facetdict.pop(self.artfacet.get(), None)
+
+        self.fill_artfacet()
+
+    def fill_artfacet(self):
+        string = ''
+        for key, value in self.facetdict.items():
+            string = string + key + ':' + value + ' '
+
+        self.artfacets.config(state='normal')
+        self.artfacets.delete(0, 'end')
+        self.artfacets.insert(0, string)
+        self.artfacets.config(state='disabled')
+
+    def add_artimage(self):
+        temp = self.imageamount.get()
+        self.imagedict[self.artimage.get()] = temp
+
+        self.fill_artimage()
+
+    def remove_artimage(self):
+        if self.artimage.get() in self.imagedict:
+            self.imagedict.pop(self.artimage.get(), None)
+
+        self.fill_artimage()
+
+    def fill_artimage(self):
+        string = ''
+        for key, value in self.imagedict.items():
+            string = string + key + ':' + value + ' '
+
+        self.artimages.config(state='normal')
+        self.artimages.delete(0, 'end')
+        self.artimages.insert(0, string)
+        self.artimages.config(state='disabled')
 
 
 if __name__ == '__main__':
