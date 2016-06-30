@@ -102,7 +102,7 @@ class FlavorSetup(tk.Frame):
         # ART_IMAGE_ELEMENT_MODIFIER
         self.artimagelabel = tk.Label(
             self, justify='center',
-            text='Art Image Emage Modifiers (256 neutral)')
+            text='Art Image Element Modifiers (256 neutral)')
         self.artimagelabel.grid(
             row=9, column=0, sticky=('w', 'e'), columnspan=4)
         self.imagedict = {}
@@ -126,6 +126,34 @@ class FlavorSetup(tk.Frame):
             self, text='Remove Image',
             command=lambda: self.remove_artimage())
         self.removeartimage.grid(row=10, column=3, sticky=('w', 'e'))
+
+        # ITEM_IMPROVEMENT_MODIFIER
+        self.itemimprovlabel = tk.Label(
+            self, justify='center',
+            text='Item Improvement Modifiers (256 neutral)')
+        self.itemimprovlabel.grid(
+            row=12, column=0, sticky=('w', 'e'), columnspan=4)
+        self.itemimprovdict = {}
+        self.itemimprovamount = tk.Spinbox(
+            self, from_=0, to=25600, justify='center')
+        self.itemimprovamount.grid(row=14, column=1, sticky=('w', 'e'))
+        self.itemimprovamount.delete(0, 'end')
+        self.itemimprovamount.insert(0, 256)
+        self.itemimprov = ttk.Combobox(self, values=self.itemimprovementlist)
+        self.itemimprov.grid(row=13, column=1, sticky=('w', 'e'))
+        self.itemimprov.set('ART_IMAGE')
+        self.itemimprovs = tkst.ScrolledText(
+            self, state='disabled', height=3, width=30, wrap=tk.WORD)
+        self.itemimprovs.grid(row=13, column=2, columnspan=2,
+                              rowspan=2, sticky=('w', 'e'))
+        self.setitemimprov = tk.Button(
+            self, text='Set Item Improvement',
+            command=lambda: self.add_itemimprov())
+        self.setitemimprov.grid(row=13, column=0, sticky=('w', 'e'))
+        self.removeitemimprov = tk.Button(
+            self, text='Remove Item Improvement',
+            command=lambda: self.remove_itemimprov())
+        self.removeitemimprov.grid(row=14, column=0, sticky=('w', 'e'))
 
     def add_currencytype(self):
         self.curmat = self.currencymaterial.get()
@@ -192,6 +220,28 @@ class FlavorSetup(tk.Frame):
         self.artimages.delete(0, 'end')
         self.artimages.insert(0, string)
         self.artimages.config(state='disabled')
+
+    def add_itemimprov(self):
+        temp = self.itemimprovamount.get()
+        self.itemimprovdict[self.itemimprov.get()] = temp
+
+        self.fill_itemimprov()
+
+    def remove_itemimprov(self):
+        if self.itemimprov.get() in self.itemimprovdict:
+            self.itemimprovdict.pop(self.itemimprov.get(), None)
+
+        self.fill_itemimprov()
+
+    def fill_itemimprov(self):
+        string = ''
+        for key, value in self.itemimprovdict.items():
+            string = string + key + ':' + value + ' '
+
+        self.itemimprovs.config(state='normal')
+        self.itemimprovs.delete('1.0', tk.END)
+        self.itemimprovs.insert('1.0', string)
+        self.itemimprovs.config(state='disabled')
 
 
 if __name__ == '__main__':
