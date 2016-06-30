@@ -67,6 +67,91 @@ class FlavorSetup(tk.Frame):
             self, variable=self.brightfore, text='Bright Fore Color')
         self.brightforefriendlycolor.grid(row=5, column=3, sticky='w')
 
+        # ART_FACET_MODIFIER
+        self.artfacetlabel = tk.Label(
+            self, justify='center', text='Art Facet Modifiers (256 neutral)')
+        self.artfacetlabel.grid(
+            row=6, column=0, sticky=('w', 'e'), columnspan=4)
+        self.ownracefacetlabel = tk.Label(
+            self, justify='left', text='Own Race:')
+        self.ownracefacetlabel.grid(row=7, column=0, sticky='e')
+        self.ownracefacet = tk.Spinbox(
+            self, from_=0, to=25600, justify='center')
+        self.ownracefacet.grid(row=7, column=1, sticky='w')
+        self.ownracefacet.delete(0, 'end')
+        self.ownracefacet.insert(0, 256)
+        self.fancifulfacetlabel = tk.Label(
+            self, justify='left', text='Fanciful:')
+        self.fancifulfacetlabel.grid(row=7, column=2, sticky='e')
+        self.fancifulfacet = tk.Spinbox(
+            self, from_=0, to=25600, justify='center')
+        self.fancifulfacet.grid(row=7, column=3, sticky='w')
+        self.fancifulfacet.delete(0, 'end')
+        self.fancifulfacet.insert(0, 256)
+        self.evilfacetlabel = tk.Label(
+            self, justify='left', text='Evil:')
+        self.evilfacetlabel.grid(row=8, column=0, sticky='e')
+        self.evilfacet = tk.Spinbox(
+            self, from_=0, to=25600, justify='center')
+        self.evilfacet.grid(row=8, column=1, sticky='w')
+        self.evilfacet.delete(0, 'end')
+        self.evilfacet.insert(0, 256)
+        self.goodfacetlabel = tk.Label(
+            self, justify='left', text='Good:')
+        self.goodfacetlabel.grid(row=8, column=2, sticky='e')
+        self.goodfacet = tk.Spinbox(
+            self, from_=0, to=25600, justify='center')
+        self.goodfacet.grid(row=8, column=3, sticky='w')
+        self.goodfacet.delete(0, 'end')
+        self.goodfacet.insert(0, 256)
+
+        # ART_IMAGE_ELEMENT_MODIFIER
+        self.artelementlabel = tk.Label(
+            self, justify='center',
+            text='Art Image Element Modifiers (256 neutral)')
+        self.artelementlabel.grid(
+            row=9, column=0, sticky=('w', 'e'), columnspan=4)
+        self.creatureelementlabel = tk.Label(
+            self, justify='left', text='Creature:')
+        self.creatureelementlabel.grid(row=10, column=0, sticky='e')
+        self.creatureelement = tk.Spinbox(
+            self, from_=0, to=25600, justify='center')
+        self.creatureelement.grid(row=10, column=1, sticky='w')
+        self.creatureelement.delete(0, 'end')
+        self.creatureelement.insert(0, 256)
+        self.plantelementlabel = tk.Label(
+            self, justify='left', text='Plant:')
+        self.plantelementlabel.grid(row=10, column=2, sticky='e')
+        self.plantelement = tk.Spinbox(
+            self, from_=0, to=25600, justify='center')
+        self.plantelement.grid(row=10, column=3, sticky='w')
+        self.plantelement.delete(0, 'end')
+        self.plantelement.insert(0, 256)
+        self.treeelementlabel = tk.Label(
+            self, justify='left', text='Tree:')
+        self.treeelementlabel.grid(row=11, column=0, sticky='e')
+        self.treeelement = tk.Spinbox(
+            self, from_=0, to=25600, justify='center')
+        self.treeelement.grid(row=11, column=1, sticky='w')
+        self.treeelement.delete(0, 'end')
+        self.treeelement.insert(0, 256)
+        self.shapeelementlabel = tk.Label(
+            self, justify='left', text='Shape:')
+        self.shapeelementlabel.grid(row=11, column=2, sticky='e')
+        self.shapeelement = tk.Spinbox(
+            self, from_=0, to=25600, justify='center')
+        self.shapeelement.grid(row=11, column=3, sticky='w')
+        self.shapeelement.delete(0, 'end')
+        self.shapeelement.insert(0, 256)
+        self.itemelementlabel = tk.Label(
+            self, justify='left', text='Item:')
+        self.itemelementlabel.grid(row=12, column=0, sticky='e')
+        self.itemelement = tk.Spinbox(
+            self, from_=0, to=25600, justify='center')
+        self.itemelement.grid(row=12, column=1, sticky='w')
+        self.itemelement.delete(0, 'end')
+        self.itemelement.insert(0, 256)
+
     def add_currencytype(self):
         self.curmat = self.currencymaterial.get()
         self.currencydict[self.curmat] = self.currencyvalue.get()
