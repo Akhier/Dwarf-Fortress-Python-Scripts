@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 import FlavorSetupTab
+import SymbolSetupTab
 
 
 class FluffSetup(tk.Frame):
@@ -10,6 +11,8 @@ class FluffSetup(tk.Frame):
         note = ttk.Notebook(self)
         flavorsetup = FlavorSetupTab.FlavorSetup(self, padx=6, pady=6)
         note.add(flavorsetup, text='Flavor')
+        symbolsetup = SymbolSetupTab.SymbolSetup(self, padx=6, pady=6)
+        note.add(symbolsetup, text='Symbols')
         note.grid()
 
 if __name__ == '__main__':
