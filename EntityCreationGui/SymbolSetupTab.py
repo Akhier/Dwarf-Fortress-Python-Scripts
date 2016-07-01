@@ -70,6 +70,26 @@ class SymbolSetup(tk.Frame):
         self.subsymbols.grid(row=4, column=1, rowspan=4,
                              columnspan=4, sticky=('w', 'e'))
 
+        # SELECT_SYMBOL
+        self.cullsymboldict = {}
+        self.setcullsymbol = tk.Button(self, text='Set Cull Symbol',
+                                       command=lambda: self.add_cullsymbol())
+        self.setcullsymbol.grid(row=8, column=0, sticky=('w', 'e'))
+        self.cullsymbolnoun = ttk.Combobox(self, values=self.symbolnounlist)
+        self.cullsymbolnoun.grid(row=9, column=0, sticky=('w', 'e'))
+        self.cullsymbolnoun.set('ALL')
+        self.cullsymbol = ttk.Combobox(self, values=self.symbollist)
+        self.cullsymbol.grid(row=10, column=0, sticky=('w', 'e'))
+        self.cullsymbol.set('FLOWERY')
+        self.removecullsymbol = tk.Button(
+            self, text='Remove Cull Symbol',
+            command=lambda: self.remove_cullsymbol())
+        self.removecullsymbol.grid(row=11, column=0, sticky=('w', 'e'))
+        self.cullsymbols = tkst.ScrolledText(self, state='disabled', height=5,
+                                             width=50, wrap=tk.WORD)
+        self.cullsymbols.grid(row=8, column=1, rowspan=4,
+                              columnspan=4, sticky=('w', 'e'))
+
     def add_symbol(self):
         self.symboldict[self.symbol.get()] = self.symbolnoun.get()
         self.fill_symbols()
@@ -117,6 +137,24 @@ class SymbolSetup(tk.Frame):
         self.subsymbols.delete('1.0', tk.END)
         self.subsymbols.insert('1.0', string)
         self.subsymbols.config(state='disabled')
+
+    def add_cullsymbol(self):
+        self.cullsymboldict[self.cullsymbol.get()] = self.cullsymbolnoun.get()
+        self.fill_cullsymbols()
+
+    def remove_cullsymbol(self):
+        if self.cullsymbol.get() in self.cullsymboldict:
+            self.cullsymboldict.pop(self.cullsymbol.get(), None)
+        self.fill_cullsymbols()
+
+    def fill_cullsymbols(self):
+        string = ''
+        for key, value in self.cullsymboldict.items():
+            string = string + value + ':' + key + ' '
+        self.cullsymbols.config(state='normal')
+        self.cullsymbols.delete('1.0', tk.END)
+        self.cullsymbols.insert('1.0', string)
+        self.cullsymbols.config(state='disabled')
 
 if __name__ == '__main__':
     root = tk.Tk()
