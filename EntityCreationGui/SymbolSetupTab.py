@@ -50,14 +50,45 @@ class SymbolSetup(tk.Frame):
         self.symbols.grid(row=0, column=1, rowspan=4,
                           columnspan=4, sticky=('w', 'e'))
 
+        # SUBSELECT_SYMBOL
+        self.subsymboldict = {}
+        self.setsubsymbol = tk.Button(self, text='Set SubSymbol',
+                                      command=lambda: self.add_subsymbol())
+        self.setsubsymbol.grid(row=4, column=0, sticky=('w', 'e'))
+        self.subsymbolnoun = ttk.Combobox(self, values=self.symbolnounlist)
+        self.subsymbolnoun.grid(row=5, column=0, sticky=('w', 'e'))
+        self.subsymbolnoun.set('ALL')
+        self.subsymbollist = []
+        self.subsymbol = ttk.Combobox(self, values=self.subsymbollist)
+        self.subsymbol.grid(row=6, column=0, sticky=('w', 'e'))
+        self.removesubsymbol = tk.Button(
+            self, text='Remove SubSymbol',
+            command=lambda: self.remove_subsymbol())
+        self.removesubsymbol.grid(row=7, column=0, sticky=('w', 'e'))
+        self.subsymbols = tkst.ScrolledText(self, state='disabled', height=5,
+                                            width=50, wrap=tk.WORD)
+        self.subsymbols.grid(row=4, column=1, rowspan=4,
+                             columnspan=4, sticky=('w', 'e'))
+
     def add_symbol(self):
         self.symboldict[self.symbol.get()] = self.symbolnoun.get()
         self.fill_symbols()
+        if self.symbol.get() not in self.subsymbollist:
+            self.subsymbollist.append(self.symbol.get())
+            self.subsymbol.config(values=self.subsymbollist)
+            self.subsymbol.set(self.symbol.get())
 
     def remove_symbol(self):
         if self.symbol.get() in self.symboldict:
-            self.symboldict.pop(self.supportedbiome.get(), None)
+            self.symboldict.pop(self.symbol.get(), None)
         self.fill_symbols()
+        if self.symbol.get() in self.subsymbollist:
+            self.subsymbol.set('')
+            self.subsymbollist.remove(self.symbol.get())
+            self.subsymbol.config(values=self.subsymbollist)
+            if self.symbol.get() in self.subsymboldict:
+                self.subsymboldict.pop(self.symbol.get(), None)
+                self.fill_subsymbols()
 
     def fill_symbols(self):
         string = ''
@@ -67,6 +98,25 @@ class SymbolSetup(tk.Frame):
         self.symbols.delete('1.0', tk.END)
         self.symbols.insert('1.0', string)
         self.symbols.config(state='disabled')
+
+    def add_subsymbol(self):
+        if self.subsymbol.get() is not '':
+            self.subsymboldict[self.subsymbol.get()] = self.subsymbolnoun.get()
+            self.fill_subsymbols()
+
+    def remove_subsymbol(self):
+        if self.subsymbol.get() in self.subsymboldict:
+            self.subsymboldict.pop(self.subsymbol.get(), None)
+            self.fill_subsymbols()
+
+    def fill_subsymbols(self):
+        string = ''
+        for key, value in self.subsymboldict.items():
+            string = string + value + ':' + key + ' '
+        self.subsymbols.config(state='normal')
+        self.subsymbols.delete('1.0', tk.END)
+        self.subsymbols.insert('1.0', string)
+        self.subsymbols.config(state='disabled')
 
 if __name__ == '__main__':
     root = tk.Tk()
