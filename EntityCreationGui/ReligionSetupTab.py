@@ -43,6 +43,44 @@ class ReligionSetup(tk.Frame):
         self.religionpantheon.grid(row=0, column=2)
 
         # RELIGION_SPHERE
+        self.curspherelist = list(self.spherelist)
+        self.selectedspheres = []
+        self.setsphere = tk.Button(self, text='Set Sphere',
+                                   command=lambda: self.add_sphere())
+        self.setsphere.grid(row=1, column=0, sticky=('w', 'e'))
+        self.sphere = ttk.Combobox(self, values=self.curspherelist)
+        self.sphere.grid(row=2, column=0, sticky=('w', 'e'))
+        self.sphere.set('AGRICULTURE')
+        self.removesphere = tk.Button(self, text='Remove Sphere',
+                                      command=lambda: self.remove_sphere())
+        self.removesphere.grid(row=3, column=0, sticky=('w', 'e'))
+        self.spheres = tkst.ScrolledText(self, state='disabled', height=4,
+                                         width=50, wrap=tk.WORD)
+        self.spheres.grid(row=1, column=1, rowspan=4,
+                          columnspan=3, sticky=('w', 'e'))
+
+    def add_sphere(self):
+        if self.sphere.get() not in self.selectedspheres:
+            self.selectedspheres.append(self.sphere.get())
+            self.fill_spheres()
+
+    def remove_sphere(self):
+        if self.sphere.get() in self.selectedspheres:
+            self.selectedspheres.remove(self.sphere.get())
+            self.fill_spheres()
+
+    def fill_spheres(self):
+        string = ''
+        self.selectedspheres.sort()
+        for value in self.selectedspheres:
+            if string is '':
+                string = value
+            else:
+                string = string + ', ' + value
+        self.spheres.config(state='normal')
+        self.spheres.delete('1.0', tk.END)
+        self.spheres.insert('1.0', string)
+        self.spheres.config(state='disabled')
 
 if __name__ == '__main__':
     root = tk.Tk()
