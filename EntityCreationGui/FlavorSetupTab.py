@@ -17,18 +17,18 @@ class FlavorSetup(tk.Frame):
         self.currencydict = {}
         self.currencymat = ''
         self.currencymaterial = tk.Entry(self, textvariable=self.currencymat)
-        self.currencymaterial.grid(row=1, column=0, sticky='w')
+        self.currencymaterial.grid(row=0, column=1, sticky='w')
         self.currencymaterial.insert(0, 'inorganic material')
         self.currencyvalue = tk.Spinbox(self, from_=0, to=9999999999999,
                                         justify='center')
-        self.currencyvalue.grid(row=2, column=0, sticky=('w', 'e'))
+        self.currencyvalue.grid(row=1, column=1, sticky=('w', 'e'))
         self.currencyvalue.delete(0, 'end')
         self.currencyvalue.insert(0, 'value')
         self.currencydisplay = tkst.ScrolledText(self, state='disabled',
-                                                 height=5, width=50,
+                                                 height=3, width=30,
                                                  wrap=tk.WORD)
-        self.currencydisplay.grid(row=0, column=1, columnspan=3,
-                                  rowspan=4, sticky=('w', 'e'))
+        self.currencydisplay.grid(row=0, column=2, columnspan=2,
+                                  rowspan=2, sticky=('w', 'e'))
         self.addcurrencytype = tk.Button(self, text='Add Currency Type',
                                          command=lambda: self.add_currencytype(
                                          ))
@@ -36,7 +36,7 @@ class FlavorSetup(tk.Frame):
         self.removecurrencytype = tk.Button(self, text='Remove Currency Type',
                                             command=lambda:
                                             self.remove_currenctytype())
-        self.removecurrencytype.grid(row=3, column=0, sticky=('w', 'e'))
+        self.removecurrencytype.grid(row=1, column=0, sticky=('w', 'e'))
 
         # CURRENCY_BY_YEAR
         self.curby = tk.IntVar()
