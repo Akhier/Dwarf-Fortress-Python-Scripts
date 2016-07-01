@@ -8,6 +8,7 @@
 # 1.3 Now only does stuff if something to do
 # 1.4 Fixed major bug: POSITION tag not being written to file
 # 1.5 Updated for 42.01
+# 1.6 Made subsymbol follow symbol
 import glob
 import re
 import os
@@ -19,6 +20,7 @@ try:
 except:
     compression = zipfile.ZIP_STORED
 
+
 def find_between(s, first, last):
     try:
         start = s.index(first) + len(first)
@@ -26,6 +28,7 @@ def find_between(s, first, last):
         return s[start:end]
     except ValueError:
         return ""
+
 
 def read_entities(entityfileslist):
     if entityfileslist:
@@ -44,37 +47,56 @@ def read_entities(entityfileslist):
                 elif re.match(r'(\[ENTITY:)', line):
                     currentEntity = find_between(line, ':', ']').lower()
                     entities[currentEntity] = []
-                    entities[currentEntity].append('[' + find_between(line, '[', ']') + ']')
+                    entities[currentEntity].append(
+                        '[' + find_between(line, '[', ']') + ']')
                 elif currentEntity != "":
-                    entities[currentEntity].append('[' + find_between(line, '[', ']') + ']')
+                    entities[currentEntity].append(
+                        '[' + find_between(line, '[', ']') + ']')
 
         return entities
     else:
         return ''
 
+
 def write_entity(entity, entityname):
-    p_gameplay = re.compile(r'(ALL_MAIN_POPS_CONTROLLABLE|OUTSIDER_CONTROLLABLE|SITE_CONTROLLABLE|CREATURE:|CREATURE_HFID)')
-    p_placement = re.compile(r'(START_BIOME|EXCLUSIVE_START_BIOME|DEFAULT_SITE_TYPE|BIOME_SUPPORT|SETTLEMENT_BIOME|LIKES_SITE|TOLERATES_SITE|WORLD_CONSTRUCTION)')
-    p_population = re.compile(r'(MAX_POP_NUMBER|MAX_SITE_POP_NUMBER|MAX_STARTING_CIV_NUMBER)')
-    p_flavor = re.compile(r'(CURRENCY_BY_YEAR|TRANSLATION|FRIENDLY_COLOR|CURRENCY:|ART_FACET_MODIFIER|ART_IMAGE_ELEMENT_MODIFIER|ITEM_IMPROVEMENT_MODIFIER|SELECT_SYMBOL|SUBSELECT_SYMBOL|CULL_SYMBOL)')
+    p_gameplay = re.compile(
+        r'(ALL_MAIN_POPS_CONTROLLABLE|OUTSIDER_CONTROLLABLE|SITE_CONTROLLABLE|CREATURE:|CREATURE_HFID)')
+    p_placement = re.compile(
+        r'(START_BIOME|EXCLUSIVE_START_BIOME|DEFAULT_SITE_TYPE|BIOME_SUPPORT|SETTLEMENT_BIOME|LIKES_SITE|TOLERATES_SITE|WORLD_CONSTRUCTION)')
+    p_population = re.compile(
+        r'(MAX_POP_NUMBER|MAX_SITE_POP_NUMBER|MAX_STARTING_CIV_NUMBER)')
+    p_flavor = re.compile(
+        r'(CURRENCY_BY_YEAR|TRANSLATION|FRIENDLY_COLOR|CURRENCY:|ART_FACET_MODIFIER|ART_IMAGE_ELEMENT_MODIFIER|ITEM_IMPROVEMENT_MODIFIER|CULL_SYMBOL)')
+    p_symbol = re.compile(r'(\[SELECT_SYMBOL)')
+    p_subsymbol = re.compile(r'(SUBSELECT_SYMBOL)')
     p_religion = re.compile(r'(RELIGION:|RELIGION_SPHERE|SPHERE_ALIGNMENT)')
-    p_tissue = re.compile(r'(TISSUE_STYLE|TS_MAINTAIN_LENGTH|TS_PREFERRED_SHAPING)')
+    p_tissue = re.compile(
+        r'(TISSUE_STYLE|TS_MAINTAIN_LENGTH|TS_PREFERRED_SHAPING)')
     p_position = re.compile(r'(POSITION)')
     p_subposition = re.compile(r'(ACCOUNT_EXEMPT|ALLOWED_CLASS|ALLOWED_CREATURE|APPOINTED_BY|BRAG_ON_KILL|CHAT_WORTHY|COLOR:|COMMANDER|CONQUERED_SITE|DEMAND_MAX|DETERMINES_COIN_DESIGN|DO_NOT_CULL|DUTY_BOUND|ELECTED|EXECUTION_SKILL|EXPORTED_IN_LEGENDS|FLASHES|GENDER:|KILL_QUEST|LAND_HOLDER|LAND_NAME|MANDATE_MAX|MENIAL_WORK_EXEMPTION|MENIAL_WORK_EXEMPTION_SPOUSE|MILITARY_SCREEN_ONLY|NAME|NAME_MALE|NAME_FEMALE|NUMBER|PRECEDENCE|PUNISHMENT_EXEMPTION|QUEST_GIVER|REJECTED_CLASS|REJECTED_CREATURE|REPLACED_BY|REQUIRED_BEDROOM|REQUIRED_BOXES|REQUIRED_CABINETS|REQUIRED_DINING|REQUIRED_OFFICE|REQUIRED_RACKS|REQUIRED_STANDS|REQUIRED_TOMB|REQUIRED_POPULATION|RESPONSIBILITY|RULES_FROM_LOCATION|SITE\]|SLEEP_PRETENSION|SPECIAL_BURIAL|SPOUSE|SPOUSE_FEMALE|SPOUSE_MALE|SQUAD|SUCCESSION|ACCOUNTING|ATTACK_ENEMIES|BUILD_MORALE|COLLECT_TAXES|EQUIPMENT_MANIFESTS|ESCORT_TAX_COLLECTOR|ESTABLISH_COLONY_TRADE_AGREEMENTS|EXECUTIONS|HEALTH_MANAGEMENT|LAW_ENFORCEMENT|LAW_MAKING|MAKE_INTRODUCTIONS|MAKE_PEACE_AGREEMENTS|MAKE_TOPIC_AGREEMENTS|MANAGE_PRODUCTION|MEET_WORKERS|MILITARY_GOALS|MILITARY_STRATEGY|PATROL_TERRITORY|RECEIVE_DIPLOMATS|RELIGION\]|REQUIRES_MARKET|REQUIRES_POPULATION|TRADE)')
-    p_leadership = re.compile(r'(LAND_HOLDER_TRIGGER|SITE_VARIABLE_POSITIONS|VARIABLE_POSITIONS)')
-    p_permission = re.compile(r'(PERMITTED_BUILDING|PERMITTED_JOB|PERMITTED_REACTION)')
+    p_leadership = re.compile(
+        r'(LAND_HOLDER_TRIGGER|SITE_VARIABLE_POSITIONS|VARIABLE_POSITIONS)')
+    p_permission = re.compile(
+        r'(PERMITTED_BUILDING|PERMITTED_JOB|PERMITTED_REACTION)')
     p_behavior = re.compile(r'(WILL_ACCEPT_TRIBUTE|WANDERER|BEAST_HUNTER|SCOUT|ABUSE_BODIES|AMBUSHER|AT_PEACE_WITH_WILDLIFE|BABYSNATCHER|BUILDS_OUTDOOR_FORTIFICATIONS|BUILDS_OUTDOOR_TOMBS|BANDITRY:|DIPLOMAT_BODYGUARDS|INVADERS_IGNORE_NEUTRALS|ITEM_THIEF|LOCAL_BANDITRY|MERCHANT_BODYGUARDS|MERCHANT_NOBILITY|PROGRESS_TRIGGER_POPULATION|PROGRESS_TRIGGER_PRODUCTION|PROGRESS_TRIGGER_TRADE|PROGRESS_TRIGGER_POP_SIEGE|PROGRESS_TRIGGER_PROD_SIEGE|PROGRESS_TRIGGER_TRADE_SIEGE|SIEGER|SKULKING|TREE_CAP_DIPLOMACY|LAYER_LINKED|UNDEAD_CANDIDATE|ETHIC|VALUE|ACTIVE_SEASON|GENERATED|FORMS|SCHOLAR:|MERCENARY)')
-    p_resource = re.compile(r'(AMMO|ARMOR|DIGGER|GLOVES|HELM|INSTRUMENT|PANTS|SHIELD|SHOES|SIEGEAMMO|TOOL|TOY|TRAPCOMP|WEAPON:)')
-    p_animal = re.compile(r'(USE_ANIMAL_PRODUCTS|USE_ANY_PET_RACE|USE_CAVE_ANIMALS|USE_EVIL_ANIMALS|USE_GOOD_ANIMALS|COMMON_DOMESTIC_MOUNT|COMMON_DOMESTIC_PACK|COMMON_DOMESTIC_PET|COMMON_DOMESTIC_PULL)')
-    p_plant = re.compile(r'(USE_EVIL_PLANTS|USE_EVIL_WOOD|USE_GOOD_PLANTS|USE_GOOD_WOOD|USE_MISC_PROCESSED_WOOD_PRODUCTS|INDOOR_WOOD|OUTDOOR_WOOD|WOOD_WEAPONS|WOOD_ARMOR)')
-    p_harvesting = re.compile(r'(RIVER_PRODUCTS|OCEAN_PRODUCTS|INDOOR_FARMING|OUTDOOR_FARMING|INDOOR_GARDENS|OUTDOOR_GARDENS|INDOOR_ORCHARDS|OUTDOOR_ORCHARDS)')
-    p_equipment = re.compile(r'(CLOTHING\]|SUBTERRANEAN_CLOTHING|EQUIPMENT_IMPROVEMENTS|IMPROVED_BOW|METAL_PREF|STONE_PREF|GEM_PREF|GEM_SHAPE|STONE_SHAPE|DIVINE_MAT_CLOTH|DIVINE_MAT_WEAPONS|DIVINE_MAT_ARMOR)')
+    p_resource = re.compile(
+        r'(AMMO|ARMOR|DIGGER|GLOVES|HELM|INSTRUMENT|PANTS|SHIELD|SHOES|SIEGEAMMO|TOOL|TOY|TRAPCOMP|WEAPON:)')
+    p_animal = re.compile(
+        r'(USE_ANIMAL_PRODUCTS|USE_ANY_PET_RACE|USE_CAVE_ANIMALS|USE_EVIL_ANIMALS|USE_GOOD_ANIMALS|COMMON_DOMESTIC_MOUNT|COMMON_DOMESTIC_PACK|COMMON_DOMESTIC_PET|COMMON_DOMESTIC_PULL)')
+    p_plant = re.compile(
+        r'(USE_EVIL_PLANTS|USE_EVIL_WOOD|USE_GOOD_PLANTS|USE_GOOD_WOOD|USE_MISC_PROCESSED_WOOD_PRODUCTS|INDOOR_WOOD|OUTDOOR_WOOD|WOOD_WEAPONS|WOOD_ARMOR)')
+    p_harvesting = re.compile(
+        r'(RIVER_PRODUCTS|OCEAN_PRODUCTS|INDOOR_FARMING|OUTDOOR_FARMING|INDOOR_GARDENS|OUTDOOR_GARDENS|INDOOR_ORCHARDS|OUTDOOR_ORCHARDS)')
+    p_equipment = re.compile(
+        r'(CLOTHING\]|SUBTERRANEAN_CLOTHING|EQUIPMENT_IMPROVEMENTS|IMPROVED_BOW|METAL_PREF|STONE_PREF|GEM_PREF|GEM_SHAPE|STONE_SHAPE|DIVINE_MAT_CLOTH|DIVINE_MAT_WEAPONS|DIVINE_MAT_ARMOR)')
     with open('entity_' + entityname + '.txt', 'w') as file:
         file.write('entity_' + entityname + '\n\n[OBJECT:ENTITY]\n\n')
         gameplay = []
         placement = []
         population = []
         flavor = []
+        symbol = []
+        subsymbol = []
         religion = []
         tissue = []
         position = {}
@@ -100,6 +122,10 @@ def write_entity(entity, entityname):
                 population.append(line)
             elif re.search(p_flavor, line):
                 flavor.append(line)
+            elif re.search(p_symbol, line):
+                symbol.append(line)
+            elif re.search(p_subsymbol, line):
+                subsymbol.append(line)
             elif re.search(p_religion, line):
                 religion.append(line)
             elif re.search(p_tissue, line):
@@ -130,141 +156,150 @@ def write_entity(entity, entityname):
                 misc.append(line)
 
         if gameplay or placement or population:
-            file.write('\n==================================================\n' + 
-                       'Entity Basics\n' + 
-                       '==================================================\n')
+            file.write('\n==================================================' +
+                       '\nEntity Basics\n===================================' +
+                       '===============\n')
             if gameplay:
-                file.write('    Gameplay Tokens\n' +    
-                           '    ----------------------------------------------\n')
+                file.write('    Gameplay Tokens\n    -----------------------' +
+                           '-----------------------\n')
                 gameplay.sort()
                 for line in gameplay:
                     file.write('    ' + line + '\n')
 
             if placement:
-                file.write('\n    Placement Tokens\n' +    
-                           '    ----------------------------------------------\n')
+                file.write('\n    Placement Tokens\n    --------------------' +
+                           '--------------------------\n')
                 placement.sort()
                 for line in placement:
                     file.write('    ' + line + '\n')
 
             if population:
-                file.write('\n    population Tokens\n' +    
-                           '    ----------------------------------------------\n')
+                file.write('\n    population Tokens\n    -------------------' +
+                           '---------------------------\n')
                 population.sort()
                 for line in population:
                     file.write('    ' + line + '\n')
 
-        if flavor or religion or tissue:
-            file.write('\n==================================================\n' + 
-                       'Fluff\n' + 
-                       '==================================================\n')
-            if flavor:
-                file.write('\n    Flavor Tokens\n' +    
-                           '    ----------------------------------------------\n')
+        if flavor or symbol or subsymbol or religion or tissue:
+            file.write('\n==================================================' +
+                       '\nFluff\n===========================================' +
+                       '=======\n')
+            if flavor or symbol or subsymbol:
+                file.write('\n    Flavor Tokens\n    -----------------------' +
+                           '-----------------------\n')
                 flavor.sort()
                 for line in flavor:
                     file.write('    ' + line + '\n')
+                symbol.sort()
+                for line in symbol:
+                    file.write('    ' + line + '\n')
+                    for subline in subsymbol:
+                        if find_between(line, ':', ':') == \
+                                find_between(subline, ':', ':'):
+                            file.write('    ' + subline + '\n')
 
             if religion:
-                file.write('\n    Religion Tokens\n' +    
-                           '    ----------------------------------------------\n')
+                file.write('\n    Religion Tokens\n    ---------------------' +
+                           '-------------------------\n')
                 religion.sort()
                 for line in religion:
                     file.write('    ' + line + '\n')
 
             if tissue:
-                file.write('\n    Tissue Styling Tokens\n' +    
-                           '    ----------------------------------------------\n')
+                file.write('\n    Tissue Styling Tokens\n    ---------------' +
+                           '-------------------------------\n')
                 tissue.sort()
                 for line in tissue:
                     file.write('    ' + line + '\n')
 
         if listOfPositions or leadership:
-            file.write('\n==================================================\n' + 
-                       'Leadership Tokens\n' + 
-                       '==================================================\n')
+            file.write('\n==================================================' +
+                       '\nLeadership Tokens\n===============================' +
+                       '===================\n')
             listOfPositions.sort()
             for item in listOfPositions:
                 file.write('    ' + item + '\n')
                 currentPosition = find_between(item, ':', ']')
                 for line in position[currentPosition]:
                     file.write('        ' + line + '\n')
-                    
+
             leadership.sort()
             for line in leadership:
                 file.write('    ' + line + '\n')
 
         if permission or behavior:
-            file.write('\n==================================================\n' + 
-                       'Capabilities\n' + 
-                       '==================================================\n')
+            file.write('\n==================================================' +
+                       '\nCapabilities\n====================================' +
+                       '==============\n')
             if permission:
-                file.write('\n    Permission Tokens\n' +    
-                           '    ----------------------------------------------\n')
+                file.write('\n    Permission Tokens\n    -------------------' +
+                           '---------------------------\n')
                 permission.sort()
                 for line in permission:
                     file.write('    ' + line + '\n')
 
             if behavior:
-                file.write('\n    Behavior Tokens\n' +    
-                           '    ----------------------------------------------\n')
+                file.write('\n    Behavior Tokens\n    ---------------------' +
+                           '-------------------------\n')
                 behavior.sort()
                 for line in behavior:
                     file.write('    ' + line + '\n')
 
         if resource or animal or plant or harvesting or equipment:
-            file.write('\n==================================================\n' + 
-                       'Resources\n' + 
-                       '==================================================\n')
+            file.write('\n==================================================' +
+                       '\nResources\n=======================================' +
+                       '===========\n')
             if resource:
-                file.write('\n    General Resource Tokens\n' +    
-                           '    ----------------------------------------------\n')
+                file.write('\n    General Resource Tokens\n    -------------' +
+                           '---------------------------------\n')
                 resource.sort()
                 for line in resource:
                     file.write('    ' + line + '\n')
 
             if animal:
-                file.write('\n    Animal Tokens\n' +    
-                           '    ----------------------------------------------\n')
+                file.write('\n    Animal Tokens\n    -----------------------' +
+                           '-----------------------\n')
                 animal.sort()
                 for line in animal:
                     file.write('    ' + line + '\n')
 
             if plant:
-                file.write('\n    Plant Tokens\n' +    
-                           '    ----------------------------------------------\n')
+                file.write('\n    Plant Tokens\n    ------------------------' +
+                           '----------------------\n')
                 plant.sort()
                 for line in plant:
                     file.write('    ' + line + '\n')
 
             if harvesting:
-                file.write('\n    Harvesting Tokens\n' +    
-                           '    ----------------------------------------------\n')
+                file.write('\n    Harvesting Tokens\n    -------------------' +
+                           '---------------------------\n')
                 harvesting.sort()
                 for line in harvesting:
                     file.write('    ' + line + '\n')
 
             if equipment:
-                file.write('\n    Equipment Tokens\n' +    
-                           '    ----------------------------------------------\n')
+                file.write('\n    Equipment Tokens\n    --------------------' +
+                           '--------------------------\n')
                 equipment.sort()
                 for line in equipment:
                     file.write('    ' + line + '\n')
 
         if misc:
-            file.write('\n==================================================\n' + 
-                       'Misc\n' + 
-                       '==================================================\n')
+            file.write('\n==================================================' +
+                       '\nMisc\n============================================' +
+                       '======\n')
             misc.sort()
             for line in misc:
                 file.write('    ' + line + '\n')
 
+
 def backup_entities(entityfileslist):
     with zipfile.ZipFile('EntityBackup_' +
                          time.strftime("%b-%d-%Y_%H-%M-%S") +
-                         '.zip', mode = 'w') as backupZip:
+                         '.zip', mode='w') as backupZip:
         for filename in entityfileslist:
             backupZip.write(filename, compress_type=compression)
+
 
 def remove_old_entities(entityfileslist):
     for filename in entityfileslist:
