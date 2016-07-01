@@ -10,7 +10,7 @@ if __name__ == '__main__':
     basicsetup = BasicSetupTab.BasicSetup(root, padx=6, pady=6)
     note.add(basicsetup, text='Basics')
     note.grid()
-    fluffsetup = FluffSetupTab.FluffSetup(root, padx=6, pady=6)
+    fluffsetup = FluffSetupTab.FluffSetup(root)
     note.add(fluffsetup, text='Fluff')
     note.grid()
     root.mainloop()

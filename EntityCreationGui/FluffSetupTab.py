@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import FlavorSetupTab
 import SymbolSetupTab
+import ReligionSetupTab
 
 
 class FluffSetup(tk.Frame):
@@ -13,6 +14,8 @@ class FluffSetup(tk.Frame):
         note.add(flavorsetup, text='Flavor')
         symbolsetup = SymbolSetupTab.SymbolSetup(self, padx=6, pady=6)
         note.add(symbolsetup, text='Symbols')
+        relgionsetup = ReligionSetupTab.ReligionSetup(self, padx=6, pady=6)
+        note.add(relgionsetup, text='Religion')
         note.grid()
 
 if __name__ == '__main__':
